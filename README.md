@@ -1,15 +1,23 @@
 # Fishi
 
-Realtime messaging app built with React, Vite and Supabase.
+Realtime messaging app built with Flutter and Supabase.
 
-## Setup
+## Supabase setup
 
-1. In Supabase, open the SQL Editor and run `supabase/schema.sql`.
-2. In Supabase, go to Authentication, Sign In / Providers, and turn on anonymous sign-ins.
-3. Copy `.env.example` to `.env` and fill in your project URL and publishable key.
-4. Install and run:
+1. Open the SQL Editor and run `supabase/schema.sql`.
+2. Go to Authentication, Sign In / Providers, and turn on anonymous sign-ins.
+
+## Running
+
+Copy `.env.example` to `.env` and fill in your project URL and publishable key, then:
 
 ```
-npm install
-npm run dev
+flutter pub get
+flutter run --dart-define-from-file=.env
+```
+
+Release build for Android:
+
+```
+flutter build apk --release --dart-define-from-file=.env
 ```

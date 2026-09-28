@@ -1,6 +1,14 @@
 .env
 .env.*
 !.env.example
-node_modules/
-dist/
+
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+*.iml
+.idea/
+.vscode/
 .DS_Store
