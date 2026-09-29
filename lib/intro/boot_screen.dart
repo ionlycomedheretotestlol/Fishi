@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../brand/fish_logo.dart';
-import '../theme.dart';
+import '../core/theme.dart';
 
 class BootScreen extends StatefulWidget {
   const BootScreen({super.key, required this.next});
