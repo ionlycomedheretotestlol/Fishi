@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 
 import '../core/data.dart';
 import '../core/models.dart';
-import '../core/theme.dart';
 
 class VoicePlayer extends ChangeNotifier {
   VoicePlayer._();
