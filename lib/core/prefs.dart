@@ -40,4 +40,16 @@ class Prefs extends ChangeNotifier {
     _p.setBool('sounds', v);
     notifyListeners();
   }
+
+  int get chatPattern => _p.getInt('chat_pattern') ?? 0;
+  set chatPattern(int v) {
+    _p.setInt('chat_pattern', v);
+    notifyListeners();
+  }
+
+  DateTime get announcementsSeen => DateTime.fromMillisecondsSinceEpoch(_p.getInt('ann_seen') ?? 0);
+  set announcementsSeen(DateTime v) {
+    _p.setInt('ann_seen', v.millisecondsSinceEpoch);
+    notifyListeners();
+  }
 }

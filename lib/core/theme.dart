@@ -3,6 +3,10 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+const kTextFont = 'FishiText';
+const kDisplayFont = 'FishiDisplay';
+const kMonoFont = 'FishiMono';
+
 class Palette {
   const Palette({
     required this.ink,
@@ -48,7 +52,7 @@ class Palette {
 
 ThemeData buildTheme(Brightness brightness) {
   final p = brightness == Brightness.dark ? Palette.dark : Palette.light;
-  final base = ThemeData(brightness: brightness, useMaterial3: true);
+  final base = ThemeData(brightness: brightness, useMaterial3: true, fontFamily: kTextFont);
   return base.copyWith(
     scaffoldBackgroundColor: p.paper,
     canvasColor: p.paper,

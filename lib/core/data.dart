@@ -57,6 +57,7 @@ class Profile {
     this.badges = const [],
     this.isBot = false,
     this.lastSeen,
+    this.adultConfirmed = false,
   });
 
   factory Profile.fromJson(Map<String, dynamic> j) => Profile(
@@ -69,6 +70,7 @@ class Profile {
         badges: ((j['badges'] as List?) ?? const []).cast<String>(),
         isBot: (j['is_bot'] as bool?) ?? false,
         lastSeen: j['last_seen'] == null ? null : DateTime.tryParse(j['last_seen'] as String),
+        adultConfirmed: j['adult_confirmed_at'] != null,
       );
 
   final String id;
@@ -80,9 +82,11 @@ class Profile {
   final List<String> badges;
   final bool isBot;
   final DateTime? lastSeen;
+  final bool adultConfirmed;
 
   bool get isFinn => username == 'finn';
   bool get isOfficial => badges.contains('official');
+  bool get activeNow => lastSeen != null && DateTime.now().difference(lastSeen!).inMinutes < 3;
 
   String? get avatarUrl =>
       avatarPath == null ? null : supa.storage.from('avatars').getPublicUrl(avatarPath!);
