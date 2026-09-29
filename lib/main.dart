@@ -21,6 +21,7 @@ Future<void> main() async {
     statusBarBrightness: Brightness.dark,
     systemNavigationBarColor: Colors.transparent,
   ));
+  debugPrint('working');
   runApp(const FishiApp());
 }
 
