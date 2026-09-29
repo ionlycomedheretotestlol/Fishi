@@ -406,6 +406,7 @@ class Segmented<T> extends StatelessWidget {
                     child: AnimatedDefaultTextStyle(
                       duration: const Duration(milliseconds: 200),
                       style: TextStyle(
+                        fontFamily: kTextFont,
                         color: i == index ? p.ink : p.muted,
                         fontSize: 14.5,
                         fontWeight: i == index ? FontWeight.w600 : FontWeight.w500,

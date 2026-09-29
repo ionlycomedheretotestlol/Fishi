@@ -10,28 +10,33 @@ import '../core/models.dart';
 import '../core/theme.dart';
 
 class VoicePlayer extends ChangeNotifier {
-  VoicePlayer._() {
-    _player.onPositionChanged.listen((p) {
-      position = p;
-      notifyListeners();
-    });
-    _player.onDurationChanged.listen((d) {
-      duration = d;
-      notifyListeners();
-    });
-    _player.onPlayerComplete.listen((_) {
-      current = null;
-      position = Duration.zero;
-      notifyListeners();
-    });
-  }
+  VoicePlayer._();
 
   static final instance = VoicePlayer._();
-  final _player = AudioPlayer();
+  AudioPlayer? _audio;
+  AudioPlayer get _player => _audio ??= _create();
   String? current;
   bool loading = false;
   Duration position = Duration.zero;
   Duration duration = Duration.zero;
+
+  AudioPlayer _create() {
+    final player = AudioPlayer();
+    player.onPositionChanged.listen((p) {
+      position = p;
+      notifyListeners();
+    });
+    player.onDurationChanged.listen((d) {
+      duration = d;
+      notifyListeners();
+    });
+    player.onPlayerComplete.listen((_) {
+      current = null;
+      position = Duration.zero;
+      notifyListeners();
+    });
+    return player;
+  }
 
   Future<void> toggle(Message m) async {
     if (current == m.id) {
@@ -63,7 +68,7 @@ class VoicePlayer extends ChangeNotifier {
   }
 
   Future<void> stop() async {
-    await _player.stop();
+    await _audio?.stop();
     current = null;
     notifyListeners();
   }
@@ -121,7 +126,7 @@ class VoiceBubbleBody extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Text(clock(playing ? vp.position : total), style: TextStyle(fontSize: 12.5, color: color, fontFamily: kMonoFont)),
+            Text(clock(playing ? vp.position : total), style: TextStyle(fontSize: 12.5, color: color)),
           ]),
         );
       },

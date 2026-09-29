@@ -340,7 +340,7 @@ class _ChatRow extends StatelessWidget {
                 if (chat.muted) Padding(padding: const EdgeInsets.only(left: 6), child: Icon(Icons.notifications_off, size: 13, color: p.muted)),
                 const SizedBox(width: 6),
                 if (chat.last != null)
-                  Text(timeLabel(chat.last!.createdAt), style: TextStyle(fontSize: 13, color: unread ? p.ink : p.muted, fontFamily: kMonoFont)),
+                  Text(timeLabel(chat.last!.createdAt), style: TextStyle(fontSize: 13, color: unread ? p.ink : p.muted)),
               ]),
               const SizedBox(height: 3),
               Row(children: [
@@ -428,7 +428,7 @@ class _FishiRow extends StatelessWidget {
                     style: TextStyle(fontSize: 16.5, fontWeight: unseen > 0 ? FontWeight.w800 : FontWeight.w600, color: p.ink),
                   ),
                 ),
-                if (latest != null) Text(timeLabel(latest!.createdAt), style: TextStyle(fontSize: 13, color: p.muted, fontFamily: kMonoFont)),
+                if (latest != null) Text(timeLabel(latest!.createdAt), style: TextStyle(fontSize: 13, color: p.muted)),
               ]),
               const SizedBox(height: 3),
               Row(children: [

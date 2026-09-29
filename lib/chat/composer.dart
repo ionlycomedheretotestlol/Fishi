@@ -49,7 +49,8 @@ class _ComposerState extends State<Composer> with TickerProviderStateMixin {
   bool _emoji = false;
   List<Profile> _suggest = [];
 
-  final _rec = AudioRecorder();
+  AudioRecorder? _recorder;
+  AudioRecorder get _rec => _recorder ??= AudioRecorder();
   bool _recording = false;
   DateTime? _recStart;
   final List<double> _levels = [];
@@ -69,7 +70,7 @@ class _ComposerState extends State<Composer> with TickerProviderStateMixin {
     widget.focus.removeListener(_onFocus);
     _ampSub?.cancel();
     _recTick?.cancel();
-    _rec.dispose();
+    _recorder?.dispose();
     super.dispose();
   }
 
@@ -296,7 +297,7 @@ class _ComposerState extends State<Composer> with TickerProviderStateMixin {
                               const SizedBox(width: 10),
                               Text(_suggest[i].displayName, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: p.ink)),
                               const SizedBox(width: 6),
-                              Text('@${_suggest[i].username}', style: TextStyle(fontSize: 14, color: p.muted, fontFamily: kMonoFont)),
+                              Text('@${_suggest[i].username}', style: TextStyle(fontSize: 14, color: p.muted)),
                             ]),
                           ),
                         ),
@@ -413,7 +414,7 @@ class _ComposerState extends State<Composer> with TickerProviderStateMixin {
           child: Row(children: [
             _Pulse(color: p.danger),
             const SizedBox(width: 10),
-            Text(clock(elapsed), style: TextStyle(fontSize: 15, color: p.ink, fontFamily: kMonoFont)),
+            Text(clock(elapsed), style: TextStyle(fontSize: 15, color: p.ink)),
             const SizedBox(width: 12),
             Expanded(
               child: SizedBox(

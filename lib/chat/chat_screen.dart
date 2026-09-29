@@ -163,7 +163,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       padding: const EdgeInsets.only(top: 3, right: 8),
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
-        transitionBuilder: (c, a) => FadeTransition(opacity: a, child: SizeTransition(sizeFactor: a, alignment: Alignment.topCenter, child: c)),
+        transitionBuilder: (c, a) => FadeTransition(opacity: a, child: SizeTransition(sizeFactor: a, alignment: Alignment.topRight, child: c)),
         child: KeyedSubtree(key: ValueKey(readers.length), child: child),
       ),
     );
@@ -259,7 +259,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                     return Column(mainAxisSize: MainAxisSize.min, children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 14, bottom: 6),
-                        child: Text(dayHeader(m.createdAt), style: TextStyle(fontSize: 12, color: p.muted, fontWeight: FontWeight.w600, fontFamily: kMonoFont)),
+                        child: Text(dayHeader(m.createdAt), style: TextStyle(fontSize: 12, color: p.muted, fontWeight: FontWeight.w600)),
                       ),
                       row,
                     ]);

@@ -35,7 +35,7 @@ class _ProfileSheet extends StatelessWidget {
         ),
         Reveal(
           delay: const Duration(milliseconds: 100),
-          child: Text('@${profile.username}', style: TextStyle(fontSize: 15, color: pal.muted, fontFamily: kMonoFont)),
+          child: Text('@${profile.username}', style: TextStyle(fontSize: 15, color: pal.muted)),
         ),
         if (profile.bio.isNotEmpty)
           Reveal(
@@ -166,7 +166,7 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
           if (other != null && !c.isGroup)
             Reveal(
               delay: const Duration(milliseconds: 120),
-              child: Center(child: Text('@${other.username}', style: TextStyle(fontSize: 15, color: p.muted, fontFamily: kMonoFont))),
+              child: Center(child: Text('@${other.username}', style: TextStyle(fontSize: 15, color: p.muted))),
             ),
           if (other != null && other.bio.isNotEmpty && !c.isGroup)
             Reveal(

@@ -5,7 +5,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'i18n.dart';
 
 SupabaseClient get supa => Supabase.instance.client;
-String? get myId => supa.auth.currentUser?.id;
+String? previewUserId;
+String? get myId => previewUserId ?? supa.auth.currentUser?.id;
 
 const emailDomain = 'u.fishi.app';
 String emailFor(String username) => '${username.toLowerCase()}@$emailDomain';

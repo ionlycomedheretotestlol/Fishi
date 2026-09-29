@@ -183,7 +183,7 @@ class PersonRow extends StatelessWidget {
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               NameLine(name: profile.displayName, badges: profile.badges, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: p.ink)),
-              Text('@${profile.username}', style: TextStyle(fontSize: 13.5, color: p.muted, fontFamily: kMonoFont)),
+              Text('@${profile.username}', style: TextStyle(fontSize: 13.5, color: p.muted)),
             ]),
           ),
           ?trailing,

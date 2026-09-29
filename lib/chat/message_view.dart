@@ -569,7 +569,7 @@ class _SystemLine extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(m.body.isEmpty ? tr('Call') : callText(m.body), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: p.ink)),
                 const SizedBox(width: 8),
-                Text(timeLabel(m.createdAt), style: TextStyle(fontSize: 12, color: p.muted, fontFamily: kMonoFont)),
+                Text(timeLabel(m.createdAt), style: TextStyle(fontSize: 12, color: p.muted)),
               ]),
             ),
           ),

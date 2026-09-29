@@ -112,7 +112,7 @@ glyph('Z', poly((20, CAP), (510, CAP), (0, 0), (510, 0)))
 
 # digits
 glyph('0', ell(260, 350, 260, 350))
-glyph('1', poly((0, 570), (190, 700), (190, 0)))
+glyph('1', poly((60, 590), (190, 700), (190, 0)))
 glyph('2', [('M', 20, 520), arc(240, 500, 225, 200, 172, -32), ('L', 10, 0), ('L', 480, 0)])
 glyph('3', [('M', 30, 610), arc(235, 530, 205, 170, 160, -90), arc(240, 190, 240, 190, 90, -160)])
 glyph('4', poly((380, 0), (380, 700), (0, 220), (510, 220)))
@@ -353,6 +353,8 @@ def build(style):
         if style.mono:
             room = style.mono - 2 * (half + style.side)
             sx = min(1.0, room / w) if w > 0 else 1.0
+            if 0 < w < room * 0.72 and ch.isalpha() and ch not in 'iljIJ':
+                sx = room * 0.72 / w
             dx = (style.mono - w * sx) / 2.0 - x0 * sx
             adv = style.mono
         else:
@@ -400,7 +402,7 @@ STYLES = [
     Style('Fishi Text', 'Regular', 400, 78, *ROUND, side=46),
     Style('Fishi Text', 'Bold', 700, 116, *ROUND, side=40),
     Style('Fishi Display', 'Heavy', 800, 148, *SQUARE, side=22, miter=1.25),
-    Style('Fishi Mono', 'Regular', 400, 74, *ROUND, side=30, mono=600),
+    Style('Fishi Mono', 'Regular', 400, 74, *ROUND, side=24, mono=560),
 ]
 
 if __name__ == '__main__':

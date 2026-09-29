@@ -297,7 +297,7 @@ class _CallScreenState extends State<CallScreen> with TickerProviderStateMixin {
                   child: Text(
                     _connected && !_ended ? '${_fmt(_elapsed)}${group ? '  ·  ${tr('{n} in call', {'n': count})}' : ''}' : _status,
                     key: ValueKey(_connected && !_ended ? 'clock' : _status),
-                    style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.75), fontFamily: kMonoFont),
+                    style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.75)),
                   ),
                 ),
               ]),

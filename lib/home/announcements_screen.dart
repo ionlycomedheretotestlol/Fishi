@@ -83,7 +83,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
                         const SizedBox(width: 8),
                         Text(tr('Fishi team'), style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: p.muted)),
                         const Spacer(),
-                        Text(dayHeader(a.createdAt), style: TextStyle(fontSize: 12.5, color: p.muted, fontFamily: kMonoFont)),
+                        Text(dayHeader(a.createdAt), style: TextStyle(fontSize: 12.5, color: p.muted)),
                       ]),
                       const SizedBox(height: 12),
                       Text(a.title, style: TextStyle(fontFamily: kDisplayFont, fontSize: 20, fontWeight: FontWeight.w800, color: p.ink, letterSpacing: -0.4)),

@@ -88,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             style: TextStyle(fontFamily: kDisplayFont, fontSize: 21, fontWeight: FontWeight.w800, color: p.ink),
                           ),
                           const SizedBox(height: 2),
-                          Text('@${me?.username ?? ''}', style: TextStyle(fontSize: 14.5, color: p.muted, fontFamily: kMonoFont)),
+                          Text('@${me?.username ?? ''}', style: TextStyle(fontSize: 14.5, color: p.muted)),
                           if ((me?.bio ?? '').isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 4),

@@ -259,7 +259,7 @@ class _NewsTabState extends State<_NewsTab> with AutomaticKeepAliveClientMixin {
                     const SizedBox(height: 3),
                     Text(items[i].body, maxLines: 3, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 14, color: p.muted)),
                     const SizedBox(height: 4),
-                    Text(dayHeader(items[i].createdAt), style: TextStyle(fontSize: 12, color: p.muted, fontFamily: kMonoFont)),
+                    Text(dayHeader(items[i].createdAt), style: TextStyle(fontSize: 12, color: p.muted)),
                   ]),
                 ),
                 CircleIcon(icon: Icons.delete_outline_rounded, size: 34, onTap: () => _delete(items[i])),
@@ -568,7 +568,7 @@ class _FlagCard extends StatelessWidget {
             child: Text(flag['matched'] as String? ?? '', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: p.danger)),
           ),
           const Spacer(),
-          Text(dayHeader(DateTime.tryParse(flag['created_at'] as String? ?? '') ?? DateTime.now()), style: TextStyle(fontSize: 12, color: p.muted, fontFamily: kMonoFont)),
+          Text(dayHeader(DateTime.tryParse(flag['created_at'] as String? ?? '') ?? DateTime.now()), style: TextStyle(fontSize: 12, color: p.muted)),
         ]),
         const SizedBox(height: 10),
         for (final m in ctx)
