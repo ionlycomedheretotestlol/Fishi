@@ -74,18 +74,24 @@ flutter:
     - assets/sounds/
 
   fonts:
-    - family: FishiText
+    - family: Inter
       fonts:
-        - asset: assets/fonts/FishiText-Regular.otf
-        - asset: assets/fonts/FishiText-Bold.otf
+        - asset: assets/fonts/Inter-400.ttf
+        - asset: assets/fonts/Inter-500.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-600.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-700.ttf
           weight: 700
-    - family: FishiDisplay
-      fonts:
-        - asset: assets/fonts/FishiDisplay-Heavy.otf
+        - asset: assets/fonts/Inter-800.ttf
           weight: 800
-    - family: FishiMono
+    - family: InterTight
       fonts:
-        - asset: assets/fonts/FishiMono-Regular.otf
+        - asset: assets/fonts/InterTight-800.ttf
+          weight: 800
+    - family: JetBrainsMono
+      fonts:
+        - asset: assets/fonts/JetBrainsMono-400.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

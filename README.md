@@ -17,7 +17,8 @@ A calm, black and white messenger for Android, built with Flutter and Supabase. 
 - Voice and video calls over LiveKit, with an incoming call screen.
 - Local notifications while the app is running, no Firebase.
 - Light, dark and auto themes, optional chat backgrounds.
-- Three typefaces and a set of 186 black and white chibi emoji, all drawn in code.
+- A set of 186 black and white chibi emoji, all drawn in code.
+- Type is Inter, Inter Tight and JetBrains Mono (SIL Open Font License).
 - Admin panel for @fishi: stats, announcements, Finn settings, watch list and flagged messages.
 - 18+ only. Only messages matching watch-list terms, or under-18 age answers, can be reviewed by the Fishi team.
 
@@ -39,7 +40,6 @@ A calm, black and white messenger for Android, built with Flutter and Supabase. 
   <img src="docs/screenshots/call.png" width="200">
   <img src="docs/screenshots/admin.png" width="200">
   <img src="docs/screenshots/emoji.png" width="200">
-  <img src="docs/screenshots/fonts.png" width="200">
 </p>
 
 ## Setup
@@ -59,15 +59,6 @@ flutter build apk --release --split-per-abi --target-platform android-arm64 --da
 ```
 
 The database lives in `supabase/migrations` and the edge functions (`finn`, `livekit-token`) in `supabase/functions`.
-
-## Fonts
-
-Fishi Text, Fishi Display and Fishi Mono are generated from stroke skeletons:
-
-```
-pip install fonttools skia-pathops
-python3 tool/fonts/build_fonts.py
-```
 
 ## Screenshots
 

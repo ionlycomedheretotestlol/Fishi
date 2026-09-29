@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-const kTextFont = 'FishiText';
-const kDisplayFont = 'FishiDisplay';
-const kMonoFont = 'FishiMono';
+const kTextFont = 'Inter';
+const kDisplayFont = 'InterTight';
+const kMonoFont = 'JetBrainsMono';
 
 class Palette {
   const Palette({

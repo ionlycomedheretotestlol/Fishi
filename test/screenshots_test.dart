@@ -40,9 +40,9 @@ Future<void> loadFonts() async {
     await loader.load();
   }
 
-  await family('FishiText', ['assets/fonts/FishiText-Regular.otf', 'assets/fonts/FishiText-Bold.otf']);
-  await family('FishiDisplay', ['assets/fonts/FishiDisplay-Heavy.otf']);
-  await family('FishiMono', ['assets/fonts/FishiMono-Regular.otf']);
+  await family('Inter', [for (final w in [400, 500, 600, 700, 800]) 'assets/fonts/Inter-$w.ttf']);
+  await family('InterTight', ['assets/fonts/InterTight-800.ttf']);
+  await family('JetBrainsMono', ['assets/fonts/JetBrainsMono-400.ttf']);
   final root = Platform.environment['FLUTTER_ROOT'];
   if (root != null) {
     final icons = File('$root/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf');
@@ -160,40 +160,6 @@ class EmojiSheet extends StatelessWidget {
   }
 }
 
-class FontSheet extends StatelessWidget {
-  const FontSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final p = Palette.of(context);
-    Widget block(String name, TextStyle s) => Padding(
-          padding: const EdgeInsets.only(bottom: 26),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(name, style: TextStyle(fontFamily: kMonoFont, fontSize: 13, color: p.muted)),
-            const SizedBox(height: 6),
-            Text('Aa Bb Cc 123', style: s.copyWith(fontSize: (s.fontSize ?? 20) * 1.6)),
-            Text('The quick brown fish jumps over the lazy wave.', style: s),
-            Text('Não, você está ótimo! Ação, pão, avô.', style: s),
-          ]),
-        );
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(22),
-          child: ListView(children: [
-            Text('Fonts', style: TextStyle(fontFamily: kDisplayFont, fontSize: 34, fontWeight: FontWeight.w800, color: p.ink)),
-            const SizedBox(height: 20),
-            block('Fishi Text Regular', TextStyle(fontFamily: kTextFont, fontSize: 20, color: p.ink)),
-            block('Fishi Text Bold', TextStyle(fontFamily: kTextFont, fontSize: 20, fontWeight: FontWeight.w700, color: p.ink)),
-            block('Fishi Display Heavy', TextStyle(fontFamily: kDisplayFont, fontSize: 22, fontWeight: FontWeight.w800, color: p.ink)),
-            block('Fishi Mono', TextStyle(fontFamily: kMonoFont, fontSize: 18, color: p.ink)),
-          ]),
-        ),
-      ),
-    );
-  }
-}
-
 void main() {
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({'perms_asked': true, 'intro_seen': true});
@@ -238,5 +204,4 @@ void main() {
         const AdminScreen(preview: {'users': 1284, 'active_today': 342, 'chats': 2931, 'messages': 48210, 'messages_today': 1876}),
       ));
   testWidgets('emoji', (t) => shoot(t, 'emoji', const EmojiSheet()));
-  testWidgets('fonts', (t) => shoot(t, 'fonts', const FontSheet()));
 }
