@@ -2,6 +2,8 @@
 
 A calm, black and white messenger for Android, built with Flutter and Supabase. English and Portuguese (Brasil).
 
+**[Download the APK](https://github.com/ionlycomedheretotestlol/Fishi/raw/main/releases/Fishi.apk)** (Android, arm64)
+
 <p>
   <img src="docs/screenshots/chats_light.png" width="200">
   <img src="docs/screenshots/chat_light.png" width="200">

@@ -14,3 +14,4 @@ build/
 .DS_Store
 supabase/.temp/
 *.apk
+!releases/Fishi.apk
