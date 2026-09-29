@@ -10,6 +10,7 @@ import '../core/motion.dart';
 import '../core/theme.dart';
 import '../home/new_chat.dart';
 import '../ui/kit.dart';
+import '../core/i18n.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key, this.preview});
@@ -21,7 +22,7 @@ class AdminScreen extends StatefulWidget {
 }
 
 class _AdminScreenState extends State<AdminScreen> {
-  static const _tabs = ['Stats', 'News', 'Finn', 'Safety', 'Badges'];
+  List<String> get _tabs => [tr('Stats'), tr('News'), 'Finn', tr('Safety'), tr('Badges')];
   final _pages = PageController();
   int _tab = 0;
 
@@ -122,13 +123,13 @@ class _StatsTabState extends State<_StatsTab> with AutomaticKeepAliveClientMixin
     super.build(context);
     final p = Palette.of(context);
     final s = _stats;
-    if (s == null) return Center(child: _failed ? Text('Could not load stats', style: TextStyle(color: p.muted)) : const Spinner());
+    if (s == null) return Center(child: _failed ? Text(tr('Could not load stats'), style: TextStyle(color: p.muted)) : const Spinner());
     final items = [
-      ('People', s['users'], Icons.people_alt_outlined),
-      ('Active today', s['active_today'], Icons.bolt_rounded),
-      ('Chats', s['chats'], Icons.forum_outlined),
-      ('Messages', s['messages'], Icons.chat_bubble_outline_rounded),
-      ('Messages today', s['messages_today'], Icons.today_outlined),
+      (tr('People'), s['users'], Icons.people_alt_outlined),
+      (tr('Active today'), s['active_today'], Icons.bolt_rounded),
+      (tr('Chats'), s['chats'], Icons.forum_outlined),
+      (tr('Messages'), s['messages'], Icons.chat_bubble_outline_rounded),
+      (tr('Messages today'), s['messages_today'], Icons.today_outlined),
     ];
     return RefreshIndicator(
       color: p.ink,
@@ -202,15 +203,15 @@ class _NewsTabState extends State<_NewsTab> with AutomaticKeepAliveClientMixin {
       _title.clear();
       _body.clear();
       await Inbox.instance.loadAnnouncements();
-      if (mounted) showToast(context, 'Posted to everyone');
+      if (mounted) showToast(context, tr('Posted to everyone'));
     } catch (_) {
-      if (mounted) showToast(context, 'Could not post.', error: true);
+      if (mounted) showToast(context, tr('Could not post.'), error: true);
     }
     if (mounted) setState(() => _busy = false);
   }
 
   Future<void> _delete(Announcement a) async {
-    final ok = await confirm(context, title: 'Delete this post?', body: a.title, action: 'Delete', danger: true);
+    final ok = await confirm(context, title: tr('Delete this post?'), body: a.title, action: tr('Delete'), danger: true);
     if (!ok) return;
     try {
       await supa.from('announcements').delete().eq('id', a.id);
@@ -226,17 +227,17 @@ class _NewsTabState extends State<_NewsTab> with AutomaticKeepAliveClientMixin {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Reveal(child: FishiField(controller: _title, label: 'Title', maxLength: 80, onChanged: (_) => setState(() {}))),
+        Reveal(child: FishiField(controller: _title, label: tr('Title'), maxLength: 80, onChanged: (_) => setState(() {}))),
         const SizedBox(height: 10),
         Reveal(
           delay: const Duration(milliseconds: 50),
-          child: FishiField(controller: _body, label: 'What is new?', maxLines: 6, maxLength: 4000, textCapitalization: TextCapitalization.sentences, onChanged: (_) => setState(() {})),
+          child: FishiField(controller: _body, label: tr('What is new?'), maxLines: 6, maxLength: 4000, textCapitalization: TextCapitalization.sentences, onChanged: (_) => setState(() {})),
         ),
         const SizedBox(height: 14),
         Reveal(
           delay: const Duration(milliseconds: 100),
           child: PillButton(
-            label: 'Post announcement',
+            label: tr('Post announcement'),
             icon: Icons.campaign_outlined,
             busy: _busy,
             onTap: _title.text.trim().isNotEmpty && _body.text.trim().isNotEmpty ? _post : null,
@@ -328,9 +329,9 @@ class _FinnTabState extends State<_FinnTab> with AutomaticKeepAliveClientMixin {
       });
       _key.clear();
       await _load();
-      if (mounted) showToast(context, 'Finn updated');
+      if (mounted) showToast(context, tr('Finn updated'));
     } catch (_) {
-      if (mounted) showToast(context, 'Could not save.', error: true);
+      if (mounted) showToast(context, tr('Could not save.'), error: true);
     }
     if (mounted) setState(() => _busy = false);
   }
@@ -355,7 +356,7 @@ class _FinnTabState extends State<_FinnTab> with AutomaticKeepAliveClientMixin {
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('Finn', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: p.ink)),
-                  Text(hasKey ? 'API key set (${c['key_hint'] ?? ''})' : 'No API key. Finn will say he is busy.', style: TextStyle(fontSize: 13.5, color: hasKey ? p.muted : p.danger)),
+                  Text(hasKey ? 'API key set (${c['key_hint'] ?? ''})' : tr('No API key. Finn will say he is busy.'), style: TextStyle(fontSize: 13.5, color: hasKey ? p.muted : p.danger)),
                 ]),
               ),
             ]),
@@ -363,20 +364,20 @@ class _FinnTabState extends State<_FinnTab> with AutomaticKeepAliveClientMixin {
         ),
         const SizedBox(height: 14),
         Stagger(start: const Duration(milliseconds: 60), children: [
-          FishiField(controller: _key, label: hasKey ? 'Replace API key' : 'API key', obscure: true),
+          FishiField(controller: _key, label: hasKey ? tr('Replace API key') : tr('API key'), obscure: true),
           const SizedBox(height: 10),
-          FishiField(controller: _endpoint, label: 'Endpoint', keyboardType: TextInputType.url),
+          FishiField(controller: _endpoint, label: tr('Endpoint'), keyboardType: TextInputType.url),
           const SizedBox(height: 10),
-          FishiField(controller: _model, label: 'Model'),
+          FishiField(controller: _model, label: tr('Model')),
           const SizedBox(height: 10),
-          FishiField(controller: _audio, label: 'Audio model'),
+          FishiField(controller: _audio, label: tr('Audio model')),
           const SizedBox(height: 10),
-          FishiField(controller: _prompt, label: 'Extra system prompt', maxLines: 8),
+          FishiField(controller: _prompt, label: tr('Extra system prompt'), maxLines: 8),
           Padding(
             padding: const EdgeInsets.fromLTRB(6, 8, 6, 16),
-            child: Text('People never see these settings. Changes apply to the next Finn reply.', style: TextStyle(fontSize: 13, color: p.muted)),
+            child: Text(tr('People never see these settings. Changes apply to the next Finn reply.'), style: TextStyle(fontSize: 13, color: p.muted)),
           ),
-          PillButton(label: 'Save Finn settings', busy: _busy, onTap: _save),
+          PillButton(label: tr('Save Finn settings'), busy: _busy, onTap: _save),
         ]),
       ],
     );
@@ -443,9 +444,9 @@ class _SafetyTabState extends State<_SafetyTab> with AutomaticKeepAliveClientMix
     try {
       await supa.rpc('admin_set_watch_terms', params: {'terms': _terms});
       setState(() => _dirty = false);
-      if (mounted) showToast(context, 'Watch list saved');
+      if (mounted) showToast(context, tr('Watch list saved'));
     } catch (_) {
-      if (mounted) showToast(context, 'Could not save.', error: true);
+      if (mounted) showToast(context, tr('Could not save.'), error: true);
     }
   }
 
@@ -468,14 +469,14 @@ class _SafetyTabState extends State<_SafetyTab> with AutomaticKeepAliveClientMix
         padding: const EdgeInsets.all(16),
         children: [
           Reveal(
-            child: Text('Watch list', style: TextStyle(fontFamily: kDisplayFont, fontSize: 20, fontWeight: FontWeight.w800, color: p.ink)),
+            child: Text(tr('Watch list'), style: TextStyle(fontFamily: kDisplayFont, fontSize: 20, fontWeight: FontWeight.w800, color: p.ink)),
           ),
           const SizedBox(height: 4),
-          Text('Only messages with these words or phrases get flagged. Ordinary swearing is never flagged. Under-18 age answers are flagged automatically.',
+          Text(tr('Only messages with these words or phrases get flagged. Ordinary swearing is never flagged. Under-18 age answers are flagged automatically.'),
               style: TextStyle(fontSize: 13, color: p.muted, height: 1.35)),
           const SizedBox(height: 12),
           Row(children: [
-            Expanded(child: FishiField(controller: _term, label: 'Add a term', onSubmitted: (_) => _add())),
+            Expanded(child: FishiField(controller: _term, label: tr('Add a term'), onSubmitted: (_) => _add())),
             const SizedBox(width: 8),
             CircleIcon(icon: Icons.add_rounded, size: 46, filled: true, onTap: _add),
           ]),
@@ -507,17 +508,17 @@ class _SafetyTabState extends State<_SafetyTab> with AutomaticKeepAliveClientMix
             duration: const Duration(milliseconds: 300),
             curve: kSmooth,
             child: _dirty
-                ? Padding(padding: const EdgeInsets.only(top: 14), child: PillButton(label: 'Save watch list', onTap: _saveTerms))
+                ? Padding(padding: const EdgeInsets.only(top: 14), child: PillButton(label: tr('Save watch list'), onTap: _saveTerms))
                 : const SizedBox(width: double.infinity),
           ),
           const SizedBox(height: 28),
           Row(children: [
-            Expanded(child: Text('Flagged', style: TextStyle(fontFamily: kDisplayFont, fontSize: 20, fontWeight: FontWeight.w800, color: p.ink))),
+            Expanded(child: Text(tr('Flagged'), style: TextStyle(fontFamily: kDisplayFont, fontSize: 20, fontWeight: FontWeight.w800, color: p.ink))),
             SizedBox(
               width: 170,
               child: Segmented<bool>(
                 values: const [true, false],
-                labels: const ['Open', 'All'],
+                labels: [tr('Open'), tr('All')],
                 value: _open,
                 onChanged: (v) {
                   setState(() => _open = v);
@@ -530,7 +531,7 @@ class _SafetyTabState extends State<_SafetyTab> with AutomaticKeepAliveClientMix
           if (_flags.isEmpty)
             Padding(
               padding: const EdgeInsets.all(30),
-              child: Center(child: Text('Nothing flagged', style: TextStyle(color: p.muted))),
+              child: Center(child: Text(tr('Nothing flagged'), style: TextStyle(color: p.muted))),
             ),
           for (var i = 0; i < _flags.length; i++)
             Reveal(
@@ -594,7 +595,7 @@ class _FlagCard extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 decoration: BoxDecoration(color: p.soft, borderRadius: BorderRadius.circular(14)),
-                child: Text('Mark reviewed', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: p.ink)),
+                child: Text(tr('Mark reviewed'), style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: p.ink)),
               ),
             ),
           ),
@@ -639,7 +640,7 @@ class _BadgesTabState extends State<_BadgesTab> with AutomaticKeepAliveClientMix
       final fresh = Profiles.instance[pr.id];
       if (fresh != null && mounted) setState(() => _results = _results.map((x) => x.id == pr.id ? fresh : x).toList());
     } catch (_) {
-      if (mounted) showToast(context, 'Could not change badges.', error: true);
+      if (mounted) showToast(context, tr('Could not change badges.'), error: true);
     }
   }
 
@@ -650,7 +651,7 @@ class _BadgesTabState extends State<_BadgesTab> with AutomaticKeepAliveClientMix
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Reveal(child: FishiField(controller: _q, label: 'Find someone', prefix: '@', onChanged: _search)),
+        Reveal(child: FishiField(controller: _q, label: tr('Find someone'), prefix: '@', onChanged: _search)),
         const SizedBox(height: 12),
         for (final pr in _results)
           Reveal(

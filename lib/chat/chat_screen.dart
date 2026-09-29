@@ -20,6 +20,7 @@ import 'chat_info.dart';
 import 'composer.dart';
 import 'message_menu.dart';
 import 'message_view.dart';
+import '../core/i18n.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key, required this.chatId, this.preview});
@@ -106,19 +107,19 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   void _menu(Message m, GlobalKey key) {
     final actions = <MenuAction>[
-      MenuAction(Icons.reply_rounded, 'Reply', () => _setReply(m)),
+      MenuAction(Icons.reply_rounded, tr('Reply'), () => _setReply(m)),
       if (!_c.isFinn && m.senderId != Inbox.instance.finnId)
-        MenuAction(Icons.auto_awesome_outlined, 'Ask Finn', () {
+        MenuAction(Icons.auto_awesome_outlined, tr('Ask Finn'), () {
           _setReply(m);
           if (!_text.text.contains('@finn')) {
             _text.value = TextEditingValue(text: '@finn ${_text.text}', selection: TextSelection.collapsed(offset: 6 + _text.text.length));
           }
         }),
-      if (m.body.isNotEmpty) MenuAction(Icons.copy_rounded, 'Copy', () => copyMessage(context, m)),
+      if (m.body.isNotEmpty) MenuAction(Icons.copy_rounded, tr('Copy'), () => copyMessage(context, m)),
       if (m.mine && !m.deleted)
-        MenuAction(Icons.undo_rounded, 'Unsend', () async {
+        MenuAction(Icons.undo_rounded, tr('Unsend'), () async {
           final ok = await _c.unsend(m);
-          if (!ok && mounted) showToast(context, 'Could not unsend.', error: true);
+          if (!ok && mounted) showToast(context, tr('Could not unsend.'), error: true);
         }, danger: true),
     ];
     showMessageMenu(
@@ -145,18 +146,18 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     Widget child;
     if (_c.isGroup) {
       child = readers.isEmpty
-          ? Text('Delivered', style: style)
+          ? Text(tr('Delivered'), style: style)
           : Row(mainAxisSize: MainAxisSize.min, children: [
               for (final r in readers.take(3))
                 Padding(padding: const EdgeInsets.only(left: 2), child: Avatar(profile: r, size: 14)),
               const SizedBox(width: 5),
-              Text('Read by ${readers.length}', style: style),
+              Text(tr('Read by {n}', {'n': readers.length}), style: style),
             ]);
     } else if (_c.isFinn) {
       return null;
     } else {
       final other = _c.members.entries.where((e) => e.key != myId).firstOrNull?.value;
-      child = readers.isEmpty || other == null ? Text('Delivered', style: style) : Text('Read ${timeLabel(other.lastReadAt)}', style: style);
+      child = readers.isEmpty || other == null ? Text(tr('Delivered'), style: style) : Text(tr('Read {time}', {'time': timeLabel(other.lastReadAt)}), style: style);
     }
     return Padding(
       padding: const EdgeInsets.only(top: 3, right: 8),
@@ -199,15 +200,15 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             if (_c.loading)
               const Center(child: Spinner())
             else if (_c.failed)
-              Center(child: EmptyState(icon: Icon(Icons.cloud_off_rounded, size: 48, color: p.muted), title: 'Could not load this chat', body: 'Check your connection.'))
+              Center(child: EmptyState(icon: Icon(Icons.cloud_off_rounded, size: 48, color: p.muted), title: tr('Could not load this chat'), body: tr('Check your connection.')))
             else if (msgs.isEmpty && typing.isEmpty)
               Center(
                 child: EmptyState(
                   icon: _c.isFinn ? const FinnAvatar(size: 80) : (_c.isGroup ? Avatar(name: _c.title, size: 80, group: true) : Avatar(profile: _c.other, size: 80)),
-                  title: _c.isFinn ? 'Hi, I am Finn' : 'Say hi to ${_c.title}',
+                  title: _c.isFinn ? tr('Hi, I am Finn') : tr('Say hi to {name}', {'name': _c.title}),
                   body: _c.isFinn
-                      ? 'Ask me anything. Reply to a photo or voice note and ask about it. I can also text people for you.'
-                      : 'Messages you send show up here.',
+                      ? tr('Ask me anything. Reply to a photo or voice note and ask about it. I can also text people for you.')
+                      : tr('Messages you send show up here.'),
                 ),
               )
             else
@@ -290,7 +291,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                         ),
                         child: Row(mainAxisSize: MainAxisSize.min, children: [
                           if (_newWhileAway > 0) ...[
-                            Text('$_newWhileAway new', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: p.ink)),
+                            Text(tr('{n} new', {'n': _newWhileAway}), style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: p.ink)),
                             const SizedBox(width: 4),
                           ],
                           Icon(Icons.keyboard_arrow_down_rounded, color: p.ink),
@@ -328,13 +329,13 @@ class _Header extends StatelessWidget {
     final typing = c.typingNames;
     String sub;
     if (typing.isNotEmpty) {
-      sub = c.isGroup ? '${typing.join(', ')} typing...' : 'typing...';
+      sub = c.isGroup ? tr('{names} typing...', {'names': typing.join(', ')}) : tr('typing...');
     } else if (c.isFinn) {
-      sub = 'Your AI buddy';
+      sub = tr('Your AI buddy');
     } else if (c.isGroup) {
-      sub = '${c.members.length} members';
+      sub = tr('{n} members', {'n': c.members.length});
     } else if (other?.activeNow ?? false) {
-      sub = 'Active now';
+      sub = tr('Active now');
     } else {
       sub = other == null ? '' : '@${other.username}';
     }

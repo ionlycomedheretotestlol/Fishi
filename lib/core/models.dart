@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'data.dart';
+import 'i18n.dart';
 
 DateTime? _time(dynamic v) => v == null ? null : DateTime.tryParse(v as String);
 
@@ -23,14 +24,14 @@ class LastMessage {
 
   String preview({bool group = false, String? senderName}) {
     final mine = senderId == myId;
-    final who = mine ? 'You: ' : (group && senderName != null ? '$senderName: ' : '');
-    if (deleted) return mine ? 'You unsent a message' : 'Message unsent';
+    final who = mine ? tr('You: ') : (group && senderName != null ? '$senderName: ' : '');
+    if (deleted) return mine ? tr('You unsent a message') : tr('Message unsent');
     return switch (kind) {
-      'image' => '${who}Photo',
-      'video' => '${who}Video',
-      'audio' => '${who}Voice message',
-      'call' => body.isEmpty ? 'Call' : body,
-      'system' => body,
+      'image' => '$who${tr('Photo')}',
+      'video' => '$who${tr('Video')}',
+      'audio' => '$who${tr('Voice message')}',
+      'call' => body.isEmpty ? tr('Call') : callText(body),
+      'system' => tr(body),
       _ => '$who$body',
     };
   }
@@ -82,7 +83,7 @@ class ChatSummary {
 
   bool get isGroup => kind == 'group';
   bool get isFinn => kind == 'finn';
-  String get title => isGroup ? (name ?? 'Group') : (isFinn ? 'Finn' : other?.displayName ?? 'Chat');
+  String get title => isGroup ? (name ?? tr('Group')) : (isFinn ? 'Finn' : other?.displayName ?? tr('Chat'));
   String? get groupAvatarUrl => avatarPath == null ? null : supa.storage.from('avatars').getPublicUrl(avatarPath!);
 }
 

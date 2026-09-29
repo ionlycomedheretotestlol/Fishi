@@ -7,6 +7,7 @@ import 'data.dart';
 import 'models.dart';
 import 'notify.dart';
 import 'prefs.dart';
+import 'i18n.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -184,12 +185,12 @@ class Inbox extends ChangeNotifier {
   Future<void> _notify(ChatSummary c, Message m) async {
     await Profiles.instance.ensure([m.senderId]);
     final sender = Profiles.instance[m.senderId];
-    final name = sender?.displayName ?? 'Someone';
+    final name = sender?.displayName ?? tr('Someone');
     final mentioned = m.mentions.contains(myId);
     final body = LastMessage(body: m.body, kind: m.kind, senderId: m.senderId, createdAt: m.createdAt, deleted: false).preview();
     await Notify.message(
       chatId: c.id,
-      title: c.isGroup ? '${mentioned ? '@ ' : ''}$name in ${c.title}' : name,
+      title: c.isGroup ? '${mentioned ? '@ ' : ''}${tr('{name} in {group}', {'name': name, 'group': c.title})}' : name,
       body: body,
     );
   }

@@ -5,6 +5,7 @@ import '../core/data.dart';
 import '../core/models.dart';
 import '../core/theme.dart';
 import 'message_view.dart';
+import '../core/i18n.dart';
 
 class MediaViewer extends StatefulWidget {
   const MediaViewer({super.key, required this.message});
@@ -94,7 +95,7 @@ class _MediaViewerState extends State<MediaViewer> with SingleTickerProviderStat
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Text(m.mine ? 'You' : (sender?.displayName ?? ''), style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+                          Text(m.mine ? tr('You') : (sender?.displayName ?? ''), style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
                           Text(dayHeader(m.createdAt), style: const TextStyle(color: Colors.white60, fontSize: 13)),
                         ]),
                       ),

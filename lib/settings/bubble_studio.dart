@@ -7,6 +7,7 @@ import '../core/motion.dart';
 import '../core/theme.dart';
 import '../emoji/emoji_text.dart';
 import '../ui/kit.dart';
+import '../core/i18n.dart';
 
 const _swatches = [
   Color(0xFF141414),
@@ -50,13 +51,13 @@ class _BubbleStudioState extends State<BubbleStudio> {
       await supa.from('profiles').update({'bubble': _style.toJson()}).eq('id', myId!);
       await Profiles.instance.refresh(myId!);
       if (mounted) {
-        showToast(context, 'Everyone sees your new bubble now');
+        showToast(context, tr('Everyone sees your new bubble now'));
         Navigator.of(context).pop();
       }
     } catch (_) {
       if (mounted) {
         setState(() => _busy = false);
-        showToast(context, 'Could not save.', error: true);
+        showToast(context, tr('Could not save.'), error: true);
       }
     }
   }
@@ -65,7 +66,7 @@ class _BubbleStudioState extends State<BubbleStudio> {
   Widget build(BuildContext context) {
     final p = Palette.of(context);
     return Scaffold(
-      appBar: const TopBar(title: 'Bubble studio'),
+      appBar: TopBar(title: tr('Bubble studio')),
       body: Column(children: [
         Expanded(
           child: ListView(
@@ -84,7 +85,7 @@ class _BubbleStudioState extends State<BubbleStudio> {
                 delay: const Duration(milliseconds: 80),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                  child: Text('Shape', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, letterSpacing: 0.8, color: p.muted)),
+                  child: Text(tr('Shape'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, letterSpacing: 0.8, color: p.muted)),
                 ),
               ),
               Padding(
@@ -115,7 +116,7 @@ class _BubbleStudioState extends State<BubbleStudio> {
                 delay: const Duration(milliseconds: 300),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(30, 22, 30, 10),
-                  child: Text('Color', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, letterSpacing: 0.8, color: p.muted)),
+                  child: Text(tr('Color'), style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, letterSpacing: 0.8, color: p.muted)),
                 ),
               ),
               Reveal(
@@ -171,7 +172,7 @@ class _BubbleStudioState extends State<BubbleStudio> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(30, 16, 30, 0),
-                child: Text('Your bubble shows up like this for everyone you talk to.', style: TextStyle(fontSize: 13, color: p.muted)),
+                child: Text(tr('Your bubble shows up like this for everyone you talk to.'), style: TextStyle(fontSize: 13, color: p.muted)),
               ),
             ],
           ),
@@ -180,7 +181,7 @@ class _BubbleStudioState extends State<BubbleStudio> {
           top: false,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(18, 6, 18, 12),
-            child: PillButton(label: 'Use this bubble', busy: _busy, onTap: _save),
+            child: PillButton(label: tr('Use this bubble'), busy: _busy, onTap: _save),
           ),
         ),
       ]),
@@ -229,13 +230,13 @@ class _Preview extends StatelessWidget {
           style: other,
           mine: false,
           tail: true,
-          child: Text('ok show me the new bubble', style: TextStyle(fontSize: 16.5, color: bubbleText(other, p, mine: false))),
+          child: Text(tr('ok show me the new bubble'), style: TextStyle(fontSize: 16.5, color: bubbleText(other, p, mine: false))),
         ),
       ),
       const SizedBox(height: 10),
-      mine('ta-da', tail: false),
+      mine(tr('ta-da'), tail: false),
       const SizedBox(height: 3),
-      mine('everyone sees it like this 🐟'),
+      mine(tr('everyone sees it like this 🐟')),
     ]);
   }
 }

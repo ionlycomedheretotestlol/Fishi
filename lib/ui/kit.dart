@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../core/motion.dart';
 import '../core/theme.dart';
+import '../core/i18n.dart';
 
 class Spinner extends StatefulWidget {
   const Spinner({super.key, this.size = 20, this.color, this.stroke = 2.4});
@@ -876,7 +877,7 @@ class _ConfirmSheet extends StatelessWidget {
         const SizedBox(height: 22),
         PillButton(label: action, danger: danger, onTap: () => Navigator.of(context).pop(true)),
         const SizedBox(height: 10),
-        PillButton(label: 'Cancel', secondary: true, onTap: () => Navigator.of(context).pop(false)),
+        PillButton(label: tr('Cancel'), secondary: true, onTap: () => Navigator.of(context).pop(false)),
       ]),
     );
   }

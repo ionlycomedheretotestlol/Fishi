@@ -13,6 +13,7 @@ import '../core/models.dart';
 import '../core/motion.dart';
 import '../core/theme.dart';
 import 'call_center.dart';
+import '../core/i18n.dart';
 
 class CallScreen extends StatefulWidget {
   const CallScreen({super.key, required this.call, required this.title, required this.outgoing, required this.video, this.preview = false});
@@ -51,7 +52,7 @@ class _CallScreenState extends State<CallScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _status = widget.outgoing ? 'Calling...' : 'Connecting...';
+    _status = widget.outgoing ? tr('Calling...') : tr('Connecting...');
     if (widget.preview) {
       _status = '';
       _connected = true;
@@ -64,7 +65,7 @@ class _CallScreenState extends State<CallScreen> with TickerProviderStateMixin {
     _join();
     if (widget.outgoing) {
       _timeout = Timer(const Duration(seconds: 45), () {
-        if (!_connected) _hangUp(reason: 'No answer');
+        if (!_connected) _hangUp(reason: tr('No answer'));
       });
     }
     _pip.addListener(() {
@@ -74,10 +75,10 @@ class _CallScreenState extends State<CallScreen> with TickerProviderStateMixin {
   }
 
   void _onUpdate(CallInfo c) {
-    if (c.status == 'declined') _end('Declined');
-    if (c.status == 'missed' && !_connected) _end('No answer');
-    if (c.status == 'ended' && (_room?.remoteParticipants.isEmpty ?? true)) _end('Call ended');
-    if (c.status == 'active' && widget.outgoing && !_connected) setState(() => _status = 'Connecting...');
+    if (c.status == 'declined') _end(tr('Declined'));
+    if (c.status == 'missed' && !_connected) _end(tr('No answer'));
+    if (c.status == 'ended' && (_room?.remoteParticipants.isEmpty ?? true)) _end(tr('Call ended'));
+    if (c.status == 'active' && widget.outgoing && !_connected) setState(() => _status = tr('Connecting...'));
   }
 
   Future<void> _join() async {
@@ -98,7 +99,7 @@ class _CallScreenState extends State<CallScreen> with TickerProviderStateMixin {
         ..on<TrackUnmutedEvent>((_) => _refresh())
         ..on<ActiveSpeakersChangedEvent>((_) => _refresh())
         ..on<RoomDisconnectedEvent>((_) {
-          if (!_ended) _end('Call ended');
+          if (!_ended) _end(tr('Call ended'));
         });
       await room.connect(data['url'] as String, data['token'] as String);
       await room.localParticipant?.setMicrophoneEnabled(true);
@@ -113,11 +114,11 @@ class _CallScreenState extends State<CallScreen> with TickerProviderStateMixin {
         await AudioManager.instance.setSpeakerOutputPreferred(_speaker);
       } catch (_) {}
       if (widget.outgoing) {
-        _status = 'Ringing...';
+        _status = tr('Ringing...');
       }
       _refresh();
     } catch (_) {
-      _end('Could not connect');
+      _end(tr('Could not connect'));
     }
   }
 
@@ -136,7 +137,7 @@ class _CallScreenState extends State<CallScreen> with TickerProviderStateMixin {
     setState(() {});
   }
 
-  Future<void> _hangUp({String reason = 'Call ended'}) async {
+  Future<void> _hangUp({String? reason}) async {
     if (_ended) return;
     HapticFeedback.mediumImpact();
     final room = _room;
@@ -148,7 +149,7 @@ class _CallScreenState extends State<CallScreen> with TickerProviderStateMixin {
       video: widget.video,
       lastOut: others <= 1,
     );
-    _end(reason);
+    _end(reason ?? tr('Call ended'));
   }
 
   Future<void> _end(String reason) async {
@@ -294,7 +295,7 @@ class _CallScreenState extends State<CallScreen> with TickerProviderStateMixin {
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 260),
                   child: Text(
-                    _connected && !_ended ? '${_fmt(_elapsed)}${group ? '  ·  $count in call' : ''}' : _status,
+                    _connected && !_ended ? '${_fmt(_elapsed)}${group ? '  ·  ${tr('{n} in call', {'n': count})}' : ''}' : _status,
                     key: ValueKey(_connected && !_ended ? 'clock' : _status),
                     style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.75), fontFamily: kMonoFont),
                   ),
@@ -337,11 +338,11 @@ class _CallScreenState extends State<CallScreen> with TickerProviderStateMixin {
                   padding: EdgeInsets.fromLTRB(20, 18, 20, mq.padding.bottom + 22),
                   color: Colors.black.withValues(alpha: 0.35),
                   child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                    _Control(index: 0, icon: _mic ? Icons.mic_rounded : Icons.mic_off_rounded, on: !_mic, label: _mic ? 'Mute' : 'Unmute', onTap: _toggleMic),
-                    _Control(index: 1, icon: _cam ? Icons.videocam_rounded : Icons.videocam_off_rounded, on: _cam, label: 'Camera', onTap: _toggleCam),
-                    if (_cam) _Control(index: 2, icon: Icons.cameraswitch_rounded, on: false, label: 'Flip', onTap: _flip),
-                    _Control(index: 3, icon: _speaker ? Icons.volume_up_rounded : Icons.hearing_rounded, on: _speaker, label: 'Speaker', onTap: _toggleSpeaker),
-                    _Control(index: 4, icon: Icons.call_end_rounded, danger: true, on: false, label: 'End', onTap: () => widget.preview ? Navigator.of(context).maybePop() : _hangUp()),
+                    _Control(index: 0, icon: _mic ? Icons.mic_rounded : Icons.mic_off_rounded, on: !_mic, label: _mic ? tr('Mute') : tr('Unmute'), onTap: _toggleMic),
+                    _Control(index: 1, icon: _cam ? Icons.videocam_rounded : Icons.videocam_off_rounded, on: _cam, label: tr('Camera'), onTap: _toggleCam),
+                    if (_cam) _Control(index: 2, icon: Icons.cameraswitch_rounded, on: false, label: tr('Flip'), onTap: _flip),
+                    _Control(index: 3, icon: _speaker ? Icons.volume_up_rounded : Icons.hearing_rounded, on: _speaker, label: tr('Speaker'), onTap: _toggleSpeaker),
+                    _Control(index: 4, icon: Icons.call_end_rounded, danger: true, on: false, label: tr('End'), onTap: () => widget.preview ? Navigator.of(context).maybePop() : _hangUp()),
                   ]),
                 ),
               ),

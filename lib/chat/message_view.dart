@@ -18,6 +18,7 @@ import 'bubble_shape.dart';
 import 'chat_controller.dart';
 import 'media_view.dart';
 import 'voice.dart';
+import '../core/i18n.dart';
 
 BubbleStyle styleFor(String senderId) {
   if (senderId == Inbox.instance.finnId) return const BubbleStyle(shape: BubbleShape.fish);
@@ -25,11 +26,11 @@ BubbleStyle styleFor(String senderId) {
 }
 
 String snippet(Message m) {
-  if (m.deleted) return 'Unsent message';
+  if (m.deleted) return tr('Unsent message');
   return switch (m.kind) {
-    'image' => m.body.isEmpty ? 'Photo' : 'Photo: ${m.body}',
-    'video' => 'Video',
-    'audio' => 'Voice message',
+    'image' => m.body.isEmpty ? tr('Photo') : tr('Photo: {text}', {'text': m.body}),
+    'video' => tr('Video'),
+    'audio' => tr('Voice message'),
     _ => m.body,
   };
 }
@@ -153,7 +154,7 @@ class _MessageRowState extends State<MessageRow> with TickerProviderStateMixin {
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               const FinnAvatar(size: 14),
               const SizedBox(width: 4),
-              Text('sent with Finn', style: TextStyle(fontSize: 11.5, color: p.muted)),
+              Text(tr('sent with Finn'), style: TextStyle(fontSize: 11.5, color: p.muted)),
             ]),
           ),
         bubble,
@@ -165,7 +166,7 @@ class _MessageRowState extends State<MessageRow> with TickerProviderStateMixin {
         if (m.failed)
           Padding(
             padding: const EdgeInsets.only(top: 3, right: 6),
-            child: Text('Not sent. Tap to retry.', style: TextStyle(fontSize: 12, color: p.danger)),
+            child: Text(tr('Not sent. Tap to retry.'), style: TextStyle(fontSize: 12, color: p.danger)),
           ),
         ?widget.footer,
       ],
@@ -251,7 +252,7 @@ class _MessageRowState extends State<MessageRow> with TickerProviderStateMixin {
     Navigator.of(context).push(sheetRoute(BottomSheetFrame(
       child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         PillButton(
-          label: 'Try again',
+          label: tr('Try again'),
           onTap: () {
             Navigator.of(context).pop();
             widget.controller.retry(widget.message);
@@ -259,7 +260,7 @@ class _MessageRowState extends State<MessageRow> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 10),
         PillButton(
-          label: 'Delete',
+          label: tr('Delete'),
           secondary: true,
           danger: true,
           onTap: () {
@@ -287,14 +288,14 @@ class MessageBubble extends StatelessWidget {
     final p = Palette.of(context);
     final mine = m.mine;
     if (m.deleted) {
-      final who = mine ? 'You' : (Profiles.instance[m.senderId]?.displayName.split(' ').first ?? 'Someone');
+      final who = mine ? tr('You') : (Profiles.instance[m.senderId]?.displayName.split(' ').first ?? tr('Someone'));
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: p.line, width: 1.2),
         ),
-        child: Text('$who unsent a message', style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: p.muted)),
+        child: Text(tr('{who} unsent a message', {'who': who}), style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: p.muted)),
       );
     }
 
@@ -322,7 +323,7 @@ class MessageBubble extends StatelessWidget {
 
     Widget? quote;
     if (reply != null) {
-      final who = reply.mine ? 'You' : (reply.senderId == Inbox.instance.finnId ? 'Finn' : Profiles.instance[reply.senderId]?.displayName ?? '');
+      final who = reply.mine ? tr('You') : (reply.senderId == Inbox.instance.finnId ? 'Finn' : Profiles.instance[reply.senderId]?.displayName ?? '');
       quote = Container(
         margin: const EdgeInsets.only(bottom: 6),
         padding: const EdgeInsets.fromLTRB(9, 5, 9, 6),
@@ -392,7 +393,7 @@ class MessageBubble extends StatelessWidget {
         content = Row(mainAxisSize: MainAxisSize.min, children: [
           Icon(Icons.play_circle_outline_rounded, color: fg),
           const SizedBox(width: 6),
-          Text('Video', style: textStyle),
+          Text(tr('Video'), style: textStyle),
         ]);
       default:
         content = Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
@@ -547,7 +548,7 @@ class _SystemLine extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = Palette.of(context);
     final m = message;
-    final who = m.mine ? 'You' : (Profiles.instance[m.senderId]?.displayName ?? 'Someone');
+    final who = m.mine ? tr('You') : (Profiles.instance[m.senderId]?.displayName ?? tr('Someone'));
     if (m.kind == 'call') {
       final video = m.mediaMeta['video'] == true;
       final missed = m.mediaMeta['missed'] == true;
@@ -566,7 +567,7 @@ class _SystemLine extends StatelessWidget {
                   color: missed ? p.danger : p.ink,
                 ),
                 const SizedBox(width: 8),
-                Text(m.body.isEmpty ? 'Call' : m.body, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: p.ink)),
+                Text(m.body.isEmpty ? tr('Call') : callText(m.body), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: p.ink)),
                 const SizedBox(width: 8),
                 Text(timeLabel(m.createdAt), style: TextStyle(fontSize: 12, color: p.muted, fontFamily: kMonoFont)),
               ]),
@@ -577,7 +578,7 @@ class _SystemLine extends StatelessWidget {
     }
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
-      child: Text('$who ${m.body}', textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: p.muted)),
+      child: Text('$who ${tr(m.body)}', textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: p.muted)),
     );
   }
 }

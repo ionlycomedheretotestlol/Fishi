@@ -9,6 +9,7 @@ import '../chat/bubble_shape.dart';
 import '../core/data.dart';
 import '../core/motion.dart';
 import '../core/theme.dart';
+import '../core/i18n.dart';
 
 class FirstIntro extends StatefulWidget {
   const FirstIntro({super.key, required this.onDone});
@@ -106,7 +107,7 @@ class _FirstIntroState extends State<FirstIntro> with SingleTickerProviderStateM
                     Positioned(
                       top: MediaQuery.paddingOf(context).top + 12,
                       right: 20,
-                      child: Text('Tap to skip', style: TextStyle(color: p.muted, fontSize: 13)),
+                      child: Text(tr('Tap to skip'), style: TextStyle(color: p.muted, fontSize: 13)),
                     ),
                   ]),
                 ),
@@ -181,7 +182,7 @@ class _SceneLogo extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 18),
-      _Caption(title: 'Say hi to Fishi', sub: 'Messaging that feels calm.', t: t),
+      _Caption(title: tr('Say hi to Fishi'), sub: tr('Messaging that feels calm.'), t: t),
     ]);
   }
 }
@@ -209,7 +210,7 @@ class _SceneBubbles extends StatelessWidget {
             style: style,
             mine: true,
             tail: true,
-            child: Text('hey, this one is mine', style: TextStyle(fontSize: 19, color: bubbleText(style, p, mine: true))),
+            child: Text(tr('hey, this one is mine'), style: TextStyle(fontSize: 19, color: bubbleText(style, p, mine: true))),
           ),
         ),
       ),
@@ -220,11 +221,11 @@ class _SceneBubbles extends StatelessWidget {
           style: const BubbleStyle(),
           mine: false,
           tail: true,
-          child: Text('cute. everyone sees it?', style: TextStyle(fontSize: 17, color: bubbleText(const BubbleStyle(), p, mine: false))),
+          child: Text(tr('cute. everyone sees it?'), style: TextStyle(fontSize: 17, color: bubbleText(const BubbleStyle(), p, mine: false))),
         ),
       ),
       const SizedBox(height: 34),
-      _Caption(title: 'Your bubble. Your shape.', sub: 'Pick a style. Everyone sees it.', t: t),
+      _Caption(title: tr('Your bubble. Your shape.'), sub: tr('Pick a style. Everyone sees it.'), t: t),
     ]);
   }
 }
@@ -290,7 +291,7 @@ class _SceneTheme extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 26),
-      _Caption(title: 'Calm white. Calm black.', sub: 'Light, dark, or follow your phone.', t: t),
+      _Caption(title: tr('Calm white. Calm black.'), sub: tr('Light, dark, or follow your phone.'), t: t),
     ]);
   }
 }
@@ -353,7 +354,7 @@ class _SceneFinn extends StatelessWidget {
                   style: const BubbleStyle(),
                   mine: true,
                   tail: true,
-                  child: Text('@finn what is this?', style: TextStyle(fontSize: 17, color: bubbleText(const BubbleStyle(), p, mine: true))),
+                  child: Text(tr('@finn what is this?'), style: TextStyle(fontSize: 17, color: bubbleText(const BubbleStyle(), p, mine: true))),
                 ),
               ),
             ),
@@ -370,13 +371,13 @@ class _SceneFinn extends StatelessWidget {
                   style: const BubbleStyle(),
                   mine: false,
                   tail: true,
-                  child: Text("That's a sourdough loaf. A good one.", style: TextStyle(fontSize: 17, color: bubbleText(const BubbleStyle(), p, mine: false))),
+                  child: Text(tr("That's a sourdough loaf. A good one."), style: TextStyle(fontSize: 17, color: bubbleText(const BubbleStyle(), p, mine: false))),
                 ),
               ),
             ),
           ),
           const SizedBox(height: 30),
-          _Caption(title: 'Meet Finn', sub: 'Reply to anything and ask. Or let him text for you.', t: t),
+          _Caption(title: tr('Meet Finn'), sub: tr('Reply to anything and ask. Or let him text for you.'), t: t),
         ]),
       ),
     );

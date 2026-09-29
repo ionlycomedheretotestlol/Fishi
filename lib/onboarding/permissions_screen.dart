@@ -7,6 +7,7 @@ import '../core/notify.dart';
 import '../core/prefs.dart';
 import '../core/theme.dart';
 import '../ui/kit.dart';
+import '../core/i18n.dart';
 
 class PermissionsScreen extends StatefulWidget {
   const PermissionsScreen({super.key, required this.onDone});
@@ -26,10 +27,10 @@ class _Perm {
 }
 
 class _PermissionsScreenState extends State<PermissionsScreen> {
-  static const _perms = [
-    _Perm(Icons.notifications_none_rounded, 'Notifications', 'Know when a message or call comes in.', Permission.notification),
-    _Perm(Icons.mic_none_rounded, 'Microphone', 'Voice notes and calls.', Permission.microphone),
-    _Perm(Icons.videocam_outlined, 'Camera', 'Video calls and photos.', Permission.camera),
+  List<_Perm> get _perms => [
+    _Perm(Icons.notifications_none_rounded, tr('Notifications'), tr('Know when a message or call comes in.'), Permission.notification),
+    _Perm(Icons.mic_none_rounded, tr('Microphone'), tr('Voice notes and calls.'), Permission.microphone),
+    _Perm(Icons.videocam_outlined, tr('Camera'), tr('Video calls and photos.'), Permission.camera),
   ];
 
   final _granted = <Permission, bool>{};
@@ -63,7 +64,7 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
         s = await perm.request();
       }
       if (s.isPermanentlyDenied && mounted) {
-        showToast(context, 'Turn it on in system settings.');
+        showToast(context, tr('Turn it on in system settings.'));
         await openAppSettings();
       }
     } catch (_) {}
@@ -104,12 +105,12 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
             const SizedBox(height: 26),
             Reveal(
               delay: const Duration(milliseconds: 120),
-              child: Text('A few permissions', textAlign: TextAlign.center, style: TextStyle(fontFamily: kDisplayFont, fontSize: 30, fontWeight: FontWeight.w800, letterSpacing: -0.8, color: p.ink)),
+              child: Text(tr('A few permissions'), textAlign: TextAlign.center, style: TextStyle(fontFamily: kDisplayFont, fontSize: 30, fontWeight: FontWeight.w800, letterSpacing: -0.8, color: p.ink)),
             ),
             const SizedBox(height: 8),
             Reveal(
               delay: const Duration(milliseconds: 180),
-              child: Text('Fishi only uses these when you do something that needs them.', textAlign: TextAlign.center, style: TextStyle(fontSize: 15.5, color: p.muted, height: 1.35)),
+              child: Text(tr('Fishi only uses these when you do something that needs them.'), textAlign: TextAlign.center, style: TextStyle(fontSize: 15.5, color: p.muted, height: 1.35)),
             ),
             const SizedBox(height: 30),
             for (var i = 0; i < _perms.length; i++)
@@ -125,7 +126,7 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
             Reveal(
               delay: const Duration(milliseconds: 600),
               offset: const Offset(0, 30),
-              child: PillButton(label: all ? 'Continue' : 'Allow all', busy: _busy, onTap: all ? _finish : _allowAll),
+              child: PillButton(label: all ? tr('Continue') : tr('Allow all'), busy: _busy, onTap: all ? _finish : _allowAll),
             ),
             const SizedBox(height: 8),
             Reveal(
@@ -135,7 +136,7 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
                 opacity: all ? 0 : 1,
                 child: TextButton(
                   onPressed: all ? null : _finish,
-                  child: Text('Not now', style: TextStyle(color: p.muted, fontSize: 15)),
+                  child: Text(tr('Not now'), style: TextStyle(color: p.muted, fontSize: 15)),
                 ),
               ),
             ),
@@ -193,7 +194,7 @@ class _PermTile extends StatelessWidget {
                     key: const ValueKey(false),
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                     decoration: BoxDecoration(color: p.soft, borderRadius: BorderRadius.circular(14)),
-                    child: Text('Allow', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: p.ink)),
+                    child: Text(tr('Allow'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: p.ink)),
                   ),
           ),
         ]),

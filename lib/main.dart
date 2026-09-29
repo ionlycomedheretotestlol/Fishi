@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'auth/auth_screens.dart';
 import 'calls/call_center.dart';
 import 'core/data.dart';
+import 'core/i18n.dart';
 import 'core/inbox.dart';
 import 'core/motion.dart';
 import 'core/notify.dart';
@@ -15,6 +17,7 @@ import 'core/theme.dart';
 import 'home/home_screen.dart';
 import 'intro/boot_screen.dart';
 import 'intro/first_intro.dart';
+import 'onboarding/language_screen.dart';
 import 'onboarding/permissions_screen.dart';
 import 'ui/kit.dart';
 
@@ -70,6 +73,9 @@ class _FishiAppState extends State<FishiApp> with WidgetsBindingObserver {
         theme: buildTheme(Brightness.light),
         darkTheme: buildTheme(Brightness.dark),
         themeMode: Prefs.instance.themeMode,
+        locale: appLocale,
+        supportedLocales: const [Locale('en'), Locale('pt', 'BR')],
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
         themeAnimationDuration: const Duration(milliseconds: 420),
         themeAnimationCurve: kSmooth,
         builder: (context, child) {
@@ -91,11 +97,21 @@ class _FishiAppState extends State<FishiApp> with WidgetsBindingObserver {
   }
 }
 
-class Launch extends StatelessWidget {
+class Launch extends StatefulWidget {
   const Launch({super.key});
 
   @override
+  State<Launch> createState() => _LaunchState();
+}
+
+class _LaunchState extends State<Launch> {
+  bool _languageDone = languageChosen();
+
+  @override
   Widget build(BuildContext context) {
+    if (!_languageDone) {
+      return LanguageScreen(onDone: () => setState(() => _languageDone = true));
+    }
     if (!Prefs.instance.introSeen) {
       return FirstIntro(onDone: () {
         Prefs.instance.introSeen = true;

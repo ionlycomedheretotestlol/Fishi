@@ -9,6 +9,7 @@ import '../core/prefs.dart';
 import '../core/theme.dart';
 import '../emoji/emoji_text.dart';
 import '../ui/kit.dart';
+import '../core/i18n.dart';
 
 class AnnouncementsScreen extends StatefulWidget {
   const AnnouncementsScreen({super.key});
@@ -54,8 +55,8 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
           ? Center(
               child: EmptyState(
                 icon: FishLogo(size: 70, color: p.ink, eyeColor: p.paper),
-                title: 'Nothing new',
-                body: 'Updates from the Fishi team show up here.',
+                title: tr('Nothing new'),
+                body: tr('Updates from the Fishi team show up here.'),
               ),
             )
           : ListView.builder(
@@ -80,7 +81,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
                           child: FishLogo(size: 28, color: p.paper, eyeColor: p.ink),
                         ),
                         const SizedBox(width: 8),
-                        Text('Fishi team', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: p.muted)),
+                        Text(tr('Fishi team'), style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: p.muted)),
                         const Spacer(),
                         Text(dayHeader(a.createdAt), style: TextStyle(fontSize: 12.5, color: p.muted, fontFamily: kMonoFont)),
                       ]),

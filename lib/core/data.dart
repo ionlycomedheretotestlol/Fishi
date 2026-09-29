@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'i18n.dart';
 
 SupabaseClient get supa => Supabase.instance.client;
 String? get myId => supa.auth.currentUser?.id;
@@ -13,14 +14,14 @@ enum BubbleShape { classic, soft, pill, square, cloud, fish, outline, bolt }
 
 extension BubbleShapeInfo on BubbleShape {
   String get label => switch (this) {
-        BubbleShape.classic => 'Classic',
-        BubbleShape.soft => 'Soft',
-        BubbleShape.pill => 'Pill',
-        BubbleShape.square => 'Block',
-        BubbleShape.cloud => 'Cloud',
-        BubbleShape.fish => 'Fish',
-        BubbleShape.outline => 'Outline',
-        BubbleShape.bolt => 'Zap',
+        BubbleShape.classic => tr('Classic'),
+        BubbleShape.soft => tr('Soft'),
+        BubbleShape.pill => tr('Pill'),
+        BubbleShape.square => tr('Block'),
+        BubbleShape.cloud => tr('Cloud'),
+        BubbleShape.fish => tr('Fish'),
+        BubbleShape.outline => tr('Outline'),
+        BubbleShape.bolt => tr('Zap'),
       };
 }
 
@@ -165,23 +166,29 @@ class MediaUrls {
   }
 }
 
+String clockLabel(DateTime local) {
+  final mm = local.minute.toString().padLeft(2, '0');
+  if (isPt) return '${local.hour.toString().padLeft(2, '0')}:$mm';
+  return '${local.hour % 12 == 0 ? 12 : local.hour % 12}:$mm ${local.hour < 12 ? 'AM' : 'PM'}';
+}
+
 String timeLabel(DateTime t) {
   final local = t.toLocal();
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
   final day = DateTime(local.year, local.month, local.day);
-  final hm = '${local.hour % 12 == 0 ? 12 : local.hour % 12}:${local.minute.toString().padLeft(2, '0')} ${local.hour < 12 ? 'AM' : 'PM'}';
+  final hm = clockLabel(local);
   if (day == today) return hm;
-  if (today.difference(day).inDays == 1) return 'Yesterday';
+  if (today.difference(day).inDays == 1) return tr('Yesterday');
   if (today.difference(day).inDays < 7) {
-    return const ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][local.weekday - 1];
+    return [tr('Monday'), tr('Tuesday'), tr('Wednesday'), tr('Thursday'), tr('Friday'), tr('Saturday'), tr('Sunday')][local.weekday - 1];
   }
-  return '${local.month}/${local.day}/${local.year % 100}';
+  return isPt ? '${local.day}/${local.month}/${local.year % 100}' : '${local.month}/${local.day}/${local.year % 100}';
 }
 
 String dayHeader(DateTime t) {
   final local = t.toLocal();
   final label = timeLabel(t);
-  final hm = '${local.hour % 12 == 0 ? 12 : local.hour % 12}:${local.minute.toString().padLeft(2, '0')} ${local.hour < 12 ? 'AM' : 'PM'}';
-  return label == hm ? 'Today $hm' : '$label $hm';
+  final hm = clockLabel(local);
+  return label == hm ? '${tr('Today')} $hm' : '$label $hm';
 }

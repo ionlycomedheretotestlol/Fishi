@@ -17,6 +17,16 @@ class Prefs extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? get language => _p.getString('language');
+  set language(String? v) {
+    if (v == null) {
+      _p.remove('language');
+    } else {
+      _p.setString('language', v);
+    }
+    notifyListeners();
+  }
+
   bool get introSeen => _p.getBool('intro_seen') ?? false;
   set introSeen(bool v) => _p.setBool('intro_seen', v);
 

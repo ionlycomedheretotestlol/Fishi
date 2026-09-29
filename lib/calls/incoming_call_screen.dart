@@ -10,6 +10,7 @@ import '../core/models.dart';
 import '../core/motion.dart';
 import '../core/theme.dart';
 import 'call_center.dart';
+import '../core/i18n.dart';
 
 class IncomingCallScreen extends StatefulWidget {
   const IncomingCallScreen({super.key, required this.call, required this.caller, required this.title});
@@ -101,7 +102,7 @@ class _IncomingCallScreenState extends State<IncomingCallScreen> with SingleTick
             const SizedBox(height: 6),
             Reveal(
               delay: const Duration(milliseconds: 180),
-              child: Text(widget.call.video ? 'Fishi video call' : 'Fishi voice call', style: const TextStyle(fontSize: 16, color: Colors.white60)),
+              child: Text(widget.call.video ? tr('Fishi video call') : tr('Fishi voice call'), style: const TextStyle(fontSize: 16, color: Colors.white60)),
             ),
             const Spacer(),
             Padding(
@@ -111,7 +112,7 @@ class _IncomingCallScreenState extends State<IncomingCallScreen> with SingleTick
                   delay: 260,
                   color: const Color(0xFFEA4A45),
                   icon: Icons.call_end_rounded,
-                  label: 'Decline',
+                  label: tr('Decline'),
                   onTap: () {
                     HapticFeedback.mediumImpact();
                     CallCenter.instance.decline(widget.call);
@@ -123,7 +124,7 @@ class _IncomingCallScreenState extends State<IncomingCallScreen> with SingleTick
                   color: Colors.white,
                   iconColor: Colors.black,
                   icon: widget.call.video ? Icons.videocam_rounded : Icons.call_rounded,
-                  label: 'Accept',
+                  label: tr('Accept'),
                   wiggle: _c,
                   onTap: () {
                     if (_done) return;

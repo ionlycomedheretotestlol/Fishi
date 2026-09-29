@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 import '../core/data.dart';
 import '../core/inbox.dart';
 import '../core/models.dart';
+import '../core/i18n.dart';
 
 const _uuid = Uuid();
 final _mentionRe = RegExp(r'@([a-z0-9_]{3,20})', caseSensitive: false);
@@ -45,7 +46,7 @@ class ChatController extends ChangeNotifier {
   }
 
   String get title {
-    if (isGroup) return name ?? 'Group';
+    if (isGroup) return name ?? tr('Group');
     if (isFinn) return 'Finn';
     return other?.displayName ?? Inbox.instance.chat(chatId)?.title ?? '';
   }
@@ -67,7 +68,7 @@ class ChatController extends ChangeNotifier {
   List<String> get typingNames {
     final now = DateTime.now();
     _typing.removeWhere((_, until) => until.isBefore(now));
-    return _typing.keys.map((id) => id == Inbox.instance.finnId ? 'Finn' : (Profiles.instance[id]?.displayName.split(' ').first ?? 'Someone')).toList();
+    return _typing.keys.map((id) => id == Inbox.instance.finnId ? 'Finn' : (Profiles.instance[id]?.displayName.split(' ').first ?? tr('Someone'))).toList();
   }
 
   List<String> get typingIds => _typing.keys.toList();

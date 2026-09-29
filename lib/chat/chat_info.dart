@@ -12,6 +12,7 @@ import '../home/new_chat.dart';
 import '../ui/kit.dart';
 import 'chat_controller.dart';
 import 'chat_screen.dart';
+import '../core/i18n.dart';
 
 void showProfileSheet(BuildContext context, Profile p) {
   Navigator.of(context).push(sheetRoute(_ProfileSheet(profile: p)));
@@ -49,7 +50,7 @@ class _ProfileSheet extends StatelessWidget {
           Reveal(
             delay: const Duration(milliseconds: 180),
             child: PillButton(
-              label: 'Message',
+              label: tr('Message'),
               icon: Icons.chat_bubble_outline_rounded,
               onTap: () async {
                 final nav = Navigator.of(context);
@@ -100,9 +101,9 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
     final ctl = TextEditingController(text: c.name ?? '');
     final name = await Navigator.of(context).push<String>(sheetRoute(BottomSheetFrame(
       child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        FishiField(controller: ctl, label: 'Group name', autofocus: true, maxLength: 48),
+        FishiField(controller: ctl, label: tr('Group name'), autofocus: true, maxLength: 48),
         const SizedBox(height: 14),
-        Builder(builder: (context) => PillButton(label: 'Save', onTap: () => Navigator.of(context).pop(ctl.text.trim()))),
+        Builder(builder: (context) => PillButton(label: tr('Save'), onTap: () => Navigator.of(context).pop(ctl.text.trim()))),
       ]),
     )));
     if (name == null || name.isEmpty) return;
@@ -112,19 +113,19 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
       Inbox.instance.refresh();
       setState(() {});
     } catch (_) {
-      if (mounted) showToast(context, 'Only group admins can rename.', error: true);
+      if (mounted) showToast(context, tr('Only group admins can rename.'), error: true);
     }
   }
 
   Future<void> _leave() async {
-    final ok = await confirm(context, title: 'Leave ${c.title}?', body: 'You will stop getting messages from this group.', action: 'Leave', danger: true);
+    final ok = await confirm(context, title: tr('Leave {name}?', {'name': c.title}), body: tr('You will stop getting messages from this group.'), action: tr('Leave'), danger: true);
     if (!ok) return;
     try {
       await supa.rpc('leave_group', params: {'chat': c.chatId});
       await Inbox.instance.refresh();
       if (mounted) Navigator.of(context).popUntil((r) => r.isFirst);
     } catch (_) {
-      if (mounted) showToast(context, 'Could not leave.', error: true);
+      if (mounted) showToast(context, tr('Could not leave.'), error: true);
     }
   }
 
@@ -180,13 +181,13 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
             Reveal(
               delay: const Duration(milliseconds: 180),
               child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                _Action(icon: Icons.call_outlined, label: 'Call', onTap: () => CallCenter.instance.start(context, c.chatId, video: false, title: c.title)),
+                _Action(icon: Icons.call_outlined, label: tr('Call'), onTap: () => CallCenter.instance.start(context, c.chatId, video: false, title: c.title)),
                 const SizedBox(width: 12),
-                _Action(icon: Icons.videocam_outlined, label: 'Video', onTap: () => CallCenter.instance.start(context, c.chatId, video: true, title: c.title)),
+                _Action(icon: Icons.videocam_outlined, label: tr('Video'), onTap: () => CallCenter.instance.start(context, c.chatId, video: true, title: c.title)),
                 const SizedBox(width: 12),
                 _Action(
                   icon: (summary?.muted ?? false) ? Icons.notifications_off_outlined : Icons.notifications_none_rounded,
-                  label: (summary?.muted ?? false) ? 'Unmute' : 'Mute',
+                  label: (summary?.muted ?? false) ? tr('Unmute') : tr('Mute'),
                   onTap: summary == null ? null : () => Inbox.instance.setMuted(summary, !summary.muted),
                 ),
               ]),
@@ -196,17 +197,17 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
             Reveal(
               delay: const Duration(milliseconds: 220),
               child: Section(
-                title: '${c.members.length} members',
+                title: tr('{n} members', {'n': c.members.length}),
                 children: [
                   if (canManage)
                     RowTile(
                       icon: Icons.person_add_alt_1_outlined,
-                      title: 'Add people',
+                      title: tr('Add people'),
                       onTap: () async {
                         final added = await Navigator.of(context).push<bool>(MaterialPageRoute(
                           builder: (_) => NewGroupScreen(addTo: c.chatId, existing: c.members.keys.toSet()),
                         ));
-                        if (added == true && context.mounted) showToast(context, 'Added');
+                        if (added == true && context.mounted) showToast(context, tr('Added'));
                       },
                     ),
                   for (final m in c.memberProfiles)
@@ -220,13 +221,13 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: NameLine(
-                              name: m.id == myId ? '${m.displayName} (you)' : m.displayName,
+                              name: m.id == myId ? '${m.displayName} ${tr('(you)')}' : m.displayName,
                               badges: m.badges,
                               style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600, color: p.ink),
                             ),
                           ),
                           if ((c.members[m.id]?.role ?? 'member') != 'member')
-                            Text(c.members[m.id]!.role, style: TextStyle(fontSize: 13, color: p.muted)),
+                            Text(tr(c.members[m.id]!.role), style: TextStyle(fontSize: 13, color: p.muted)),
                         ]),
                       ),
                     ),
@@ -236,8 +237,8 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
             Reveal(
               delay: const Duration(milliseconds: 260),
               child: Section(children: [
-                if (canManage) RowTile(icon: Icons.edit_outlined, title: 'Rename group', onTap: _rename),
-                RowTile(icon: Icons.logout_rounded, title: 'Leave group', danger: true, onTap: _leave, chevron: false),
+                if (canManage) RowTile(icon: Icons.edit_outlined, title: tr('Rename group'), onTap: _rename),
+                RowTile(icon: Icons.logout_rounded, title: tr('Leave group'), danger: true, onTap: _leave, chevron: false),
               ]),
             ),
           ],
@@ -245,12 +246,12 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
             Reveal(
               delay: const Duration(milliseconds: 200),
               child: Section(
-                title: 'About Finn',
-                footer: 'Finn remembers things you tell him to. Ask him to forget anytime. Mention @finn in any chat to bring him in.',
-                children: const [
-                  RowTile(icon: Icons.image_outlined, title: 'Reply to a photo and ask about it'),
-                  RowTile(icon: Icons.graphic_eq_rounded, title: 'He can listen to voice notes'),
-                  RowTile(icon: Icons.send_outlined, title: 'Ask him to text someone for you'),
+                title: tr('About Finn'),
+                footer: tr('Finn remembers things you tell him to. Ask him to forget anytime. Mention @finn in any chat to bring him in.'),
+                children: [
+                  RowTile(icon: Icons.image_outlined, title: tr('Reply to a photo and ask about it')),
+                  RowTile(icon: Icons.graphic_eq_rounded, title: tr('He can listen to voice notes')),
+                  RowTile(icon: Icons.send_outlined, title: tr('Ask him to text someone for you')),
                 ],
               ),
             ),

@@ -11,6 +11,7 @@ import '../core/inbox.dart';
 import '../core/motion.dart';
 import '../core/theme.dart';
 import '../ui/kit.dart';
+import '../core/i18n.dart';
 
 class PeopleSearch {
   static Future<List<Profile>> find(String q, {Set<String> exclude = const {}}) async {
@@ -89,7 +90,7 @@ class _NewChatSheetState extends State<NewChatSheet> {
     } catch (_) {
       if (mounted) {
         setState(() => _opening = null);
-        showToast(context, 'Could not open that chat.', error: true);
+        showToast(context, tr('Could not open that chat.'), error: true);
       }
     }
   }
@@ -102,12 +103,12 @@ class _NewChatSheetState extends State<NewChatSheet> {
         height: MediaQuery.sizeOf(context).height * 0.72,
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           Row(children: [
-            Text('New message', style: TextStyle(fontFamily: kDisplayFont, fontSize: 22, fontWeight: FontWeight.w800, color: p.ink)),
+            Text(tr('New message'), style: TextStyle(fontFamily: kDisplayFont, fontSize: 22, fontWeight: FontWeight.w800, color: p.ink)),
             const Spacer(),
             CircleIcon(icon: Icons.close_rounded, size: 32, onTap: () => Navigator.of(context).pop()),
           ]),
           const SizedBox(height: 14),
-          FishiField(controller: _q, label: 'Username or name', prefix: '@', autofocus: true, onChanged: _onChanged),
+          FishiField(controller: _q, label: tr('Username or name'), prefix: '@', autofocus: true, onChanged: _onChanged),
           const SizedBox(height: 10),
           Tappable(
             scale: 0.98,
@@ -126,7 +127,7 @@ class _NewChatSheetState extends State<NewChatSheet> {
                   child: Icon(Icons.group_add_outlined, color: p.paper, size: 22),
                 ),
                 const SizedBox(width: 12),
-                Text('New group', style: TextStyle(fontSize: 16.5, fontWeight: FontWeight.w600, color: p.ink)),
+                Text(tr('New group'), style: TextStyle(fontSize: 16.5, fontWeight: FontWeight.w600, color: p.ink)),
               ]),
             ),
           ),
@@ -139,7 +140,7 @@ class _NewChatSheetState extends State<NewChatSheet> {
                   : _results.isEmpty
                       ? Center(
                           key: const ValueKey('e'),
-                          child: Text(_q.text.isEmpty ? 'Find people by their username.' : 'Nobody found.', style: TextStyle(color: p.muted, fontSize: 15)),
+                          child: Text(_q.text.isEmpty ? tr('Find people by their username.') : tr('Nobody found.'), style: TextStyle(color: p.muted, fontSize: 15)),
                         )
                       : ListView.builder(
                           key: ValueKey(_results.length),
@@ -256,7 +257,7 @@ class _NewGroupScreenState extends State<NewGroupScreen> {
     } catch (_) {
       if (mounted) {
         setState(() => _busy = false);
-        showToast(context, _adding ? 'Could not add people.' : 'Could not create the group.', error: true);
+        showToast(context, _adding ? tr('Could not add people.') : tr('Could not create the group.'), error: true);
       }
     }
   }
@@ -266,19 +267,19 @@ class _NewGroupScreenState extends State<NewGroupScreen> {
     final p = Palette.of(context);
     final ok = _picked.isNotEmpty && (_adding || _name.text.trim().isNotEmpty);
     return Scaffold(
-      appBar: TopBar(title: _adding ? 'Add people' : 'New group'),
+      appBar: TopBar(title: _adding ? tr('Add people') : tr('New group')),
       body: Column(children: [
         Expanded(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(18, 14, 18, 20),
             children: [
               if (!_adding) ...[
-                Reveal(child: FishiField(controller: _name, label: 'Group name', maxLength: 48, textCapitalization: TextCapitalization.sentences, onChanged: (_) => setState(() {}))),
+                Reveal(child: FishiField(controller: _name, label: tr('Group name'), maxLength: 48, textCapitalization: TextCapitalization.sentences, onChanged: (_) => setState(() {}))),
                 const SizedBox(height: 12),
               ],
               Reveal(
                 delay: const Duration(milliseconds: 60),
-                child: FishiField(controller: _q, label: 'Add people', prefix: '@', onChanged: _search),
+                child: FishiField(controller: _q, label: tr('Add people'), prefix: '@', onChanged: _search),
               ),
               AnimatedSize(
                 duration: const Duration(milliseconds: 320),
@@ -343,7 +344,7 @@ class _NewGroupScreenState extends State<NewGroupScreen> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(18, 6, 18, 12),
             child: PillButton(
-              label: _adding ? 'Add ${_picked.isNotEmpty ? _picked.length : ''}'.trim() : 'Create group',
+              label: _adding ? _picked.isNotEmpty ? tr('Add {n}', {'n': _picked.length}) : tr('Add') : tr('Create group'),
               busy: _busy,
               onTap: ok ? _create : null,
             ),

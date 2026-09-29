@@ -21,6 +21,7 @@ import '../ui/kit.dart';
 import 'chat_controller.dart';
 import 'message_view.dart';
 import 'voice.dart';
+import '../core/i18n.dart';
 
 class Composer extends StatefulWidget {
   const Composer({
@@ -144,8 +145,8 @@ class _ComposerState extends State<Composer> with TickerProviderStateMixin {
     final source = await Navigator.of(context).push<ImageSource>(sheetRoute(BottomSheetFrame(
       child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Section(children: [
-          RowTile(icon: Icons.photo_library_outlined, title: 'Photo library', chevron: false, onTap: () => Navigator.of(context).pop(ImageSource.gallery)),
-          RowTile(icon: Icons.photo_camera_outlined, title: 'Take a photo', chevron: false, onTap: () => Navigator.of(context).pop(ImageSource.camera)),
+          RowTile(icon: Icons.photo_library_outlined, title: tr('Photo library'), chevron: false, onTap: () => Navigator.of(context).pop(ImageSource.gallery)),
+          RowTile(icon: Icons.photo_camera_outlined, title: tr('Take a photo'), chevron: false, onTap: () => Navigator.of(context).pop(ImageSource.camera)),
         ]),
       ]),
     )));
@@ -177,14 +178,14 @@ class _ComposerState extends State<Composer> with TickerProviderStateMixin {
       widget.onCancelReply();
       widget.onSent();
     } catch (_) {
-      if (mounted) showToast(context, 'Could not open photos.', error: true);
+      if (mounted) showToast(context, tr('Could not open photos.'), error: true);
     }
   }
 
   Future<void> _startRecording() async {
     try {
       if (!await _rec.hasPermission()) {
-        if (mounted) showToast(context, 'Allow the microphone to send voice notes.', error: true);
+        if (mounted) showToast(context, tr('Allow the microphone to send voice notes.'), error: true);
         return;
       }
       final dir = await getTemporaryDirectory();
@@ -205,7 +206,7 @@ class _ComposerState extends State<Composer> with TickerProviderStateMixin {
       });
       widget.focus.unfocus();
     } catch (_) {
-      if (mounted) showToast(context, 'Could not start recording.', error: true);
+      if (mounted) showToast(context, tr('Could not start recording.'), error: true);
     }
   }
 
@@ -224,7 +225,7 @@ class _ComposerState extends State<Composer> with TickerProviderStateMixin {
     }
     final ms = DateTime.now().difference(started).inMilliseconds;
     if (ms < 700) {
-      if (mounted) showToast(context, 'Hold on a little longer.');
+      if (mounted) showToast(context, tr('Hold on a little longer.'));
       return;
     }
     try {
@@ -249,7 +250,7 @@ class _ComposerState extends State<Composer> with TickerProviderStateMixin {
       widget.onCancelReply();
       widget.onSent();
     } catch (_) {
-      if (mounted) showToast(context, 'Could not send voice note.', error: true);
+      if (mounted) showToast(context, tr('Could not send voice note.'), error: true);
     }
   }
 
@@ -316,7 +317,7 @@ class _ComposerState extends State<Composer> with TickerProviderStateMixin {
                     Expanded(
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Text(
-                          'Replying to ${reply.mine ? 'yourself' : (reply.senderId == Inbox.instance.finnId ? 'Finn' : Profiles.instance[reply.senderId]?.displayName ?? '')}',
+                          tr('Replying to {name}', {'name': reply.mine ? tr('yourself') : (reply.senderId == Inbox.instance.finnId ? 'Finn' : Profiles.instance[reply.senderId]?.displayName ?? '')}),
                           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: p.ink),
                         ),
                         EmojiText(snippet(reply), maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 13.5, color: p.muted)),
@@ -378,7 +379,7 @@ class _ComposerState extends State<Composer> with TickerProviderStateMixin {
                   decoration: InputDecoration(
                     isCollapsed: true,
                     border: InputBorder.none,
-                    hintText: widget.controller.isFinn ? 'Ask Finn' : 'Message',
+                    hintText: widget.controller.isFinn ? tr('Ask Finn') : tr('Message'),
                     hintStyle: TextStyle(color: p.muted, fontSize: 16.5),
                   ),
                 ),

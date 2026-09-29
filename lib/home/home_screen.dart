@@ -20,6 +20,7 @@ import '../settings/settings_screen.dart';
 import '../ui/kit.dart';
 import 'announcements_screen.dart';
 import 'new_chat.dart';
+import '../core/i18n.dart';
 
 void openChat(BuildContext context, String chatId) {
   Navigator.of(context).push(MaterialPageRoute(builder: (_) => ChatScreen(chatId: chatId)));
@@ -101,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       body: LargeTitleScroll(
-        title: 'Chats',
+        title: tr('Chats'),
         onRefresh: _preview ? null : Inbox.instance.refresh,
         leading: Tappable(
           scale: 0.88,
@@ -148,8 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
             SliverToBoxAdapter(
               child: EmptyState(
                 icon: FishLogo(size: 64, color: p.muted, eyeColor: p.paper),
-                title: q.isEmpty ? 'No chats yet' : 'No matches',
-                body: q.isEmpty ? 'Tap the pencil to message someone by their username, or start a group.' : 'Try another name.',
+                title: q.isEmpty ? tr('No chats yet') : tr('No matches'),
+                body: q.isEmpty ? tr('Tap the pencil to message someone by their username, or start a group.') : tr('Try another name.'),
               ),
             )
           else
@@ -182,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Section(children: [
           RowTile(
             icon: c.pinned ? Icons.push_pin : Icons.push_pin_outlined,
-            title: c.pinned ? 'Unpin' : 'Pin to top',
+            title: c.pinned ? tr('Unpin') : tr('Pin to top'),
             chevron: false,
             onTap: () {
               Navigator.of(context).pop();
@@ -191,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           RowTile(
             icon: c.muted ? Icons.notifications_active_outlined : Icons.notifications_off_outlined,
-            title: c.muted ? 'Unmute' : 'Mute',
+            title: c.muted ? tr('Unmute') : tr('Mute'),
             chevron: false,
             onTap: () {
               Navigator.of(context).pop();
@@ -253,7 +254,7 @@ class _SearchBarState extends State<_SearchBar> {
                 decoration: InputDecoration(
                   isCollapsed: true,
                   border: InputBorder.none,
-                  hintText: 'Search',
+                  hintText: tr('Search'),
                   hintStyle: TextStyle(color: p.muted, fontSize: 16),
                 ),
               ),
@@ -273,7 +274,7 @@ class _SearchBarState extends State<_SearchBar> {
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 12),
-                  child: Text('Cancel', style: TextStyle(color: p.ink, fontSize: 16)),
+                  child: Text(tr('Cancel'), style: TextStyle(color: p.ink, fontSize: 16)),
                 ),
               )
             : const SizedBox.shrink(),
@@ -296,7 +297,7 @@ class _ChatRow extends StatelessWidget {
     final other = chat.other;
     final senderName = chat.last?.senderId == null ? null : Profiles.instance[chat.last!.senderId!]?.displayName.split(' ').first;
     final preview = chat.last?.preview(group: chat.isGroup, senderName: senderName) ??
-        (chat.isFinn ? 'Ask me anything. Reply to a photo and ask about it.' : 'Say hi');
+        (chat.isFinn ? tr('Ask me anything. Reply to a photo and ask about it.') : tr('Say hi'));
     final unread = chat.unread > 0;
     final badges = chat.isFinn ? const ['ai'] : (other?.badges ?? const <String>[]);
     return Tappable(
@@ -433,7 +434,7 @@ class _FishiRow extends StatelessWidget {
               Row(children: [
                 Expanded(
                   child: Text(
-                    latest?.title ?? 'News and updates from the Fishi team',
+                    latest?.title ?? tr('News and updates from the Fishi team'),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 14.5, color: unseen > 0 ? p.ink : p.muted),

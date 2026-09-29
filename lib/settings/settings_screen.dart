@@ -14,6 +14,7 @@ import '../core/prefs.dart';
 import '../core/theme.dart';
 import '../ui/kit.dart';
 import 'bubble_studio.dart';
+import '../core/i18n.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -42,7 +43,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _signOut() async {
-    final ok = await confirm(context, title: 'Sign out?', action: 'Sign out', danger: true);
+    final ok = await confirm(context, title: tr('Sign out?'), action: tr('Sign out'), danger: true);
     if (!ok) return;
     await Inbox.instance.stop();
     await supa.auth.signOut();
@@ -58,7 +59,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Duration d() => Duration(milliseconds: 60 + 50 * i++);
     return Scaffold(
       body: LargeTitleScroll(
-        title: 'Settings',
+        title: tr('Settings'),
         leading: Tappable(
           scale: 0.85,
           onTap: () => Navigator.of(context).maybePop(),
@@ -105,24 +106,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SliverToBoxAdapter(
             child: Reveal(
               delay: d(),
-              child: Section(title: 'Look', children: [
+              child: Section(title: tr('Look'), children: [
                 Padding(
                   padding: const EdgeInsets.all(14),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('Theme', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: p.ink)),
+                    Text(tr('Theme'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: p.ink)),
                     const SizedBox(height: 10),
                     Segmented<ThemeMode>(
                       values: const [ThemeMode.system, ThemeMode.light, ThemeMode.dark],
-                      labels: const ['Auto', 'Light', 'Dark'],
+                      labels: [tr('Auto'), tr('Light'), tr('Dark')],
                       value: prefs.themeMode,
                       onChanged: (v) => prefs.themeMode = v,
                     ),
                   ]),
                 ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(tr('Language'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: p.ink)),
+                    const SizedBox(height: 10),
+                    Segmented<String>(
+                      values: const ['en', 'pt'],
+                      labels: const ['English', 'Português'],
+                      value: prefs.language ?? 'en',
+                      onChanged: (v) {
+                        prefs.language = v;
+                        rebuildAll(context);
+                      },
+                    ),
+                  ]),
+                ),
                 RowTile(
                   icon: Icons.chat_bubble_outline_rounded,
-                  title: 'Bubble studio',
-                  subtitle: me?.bubble.shape.label ?? 'Classic',
+                  title: tr('Bubble studio'),
+                  subtitle: me?.bubble.shape.label ?? tr('Classic'),
                   trailing: Padding(
                     padding: const EdgeInsets.only(right: 6),
                     child: SizedBox(
@@ -137,7 +154,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 RowTile(
                   icon: Icons.texture_rounded,
-                  title: 'Chat background',
+                  title: tr('Chat background'),
                   chevron: false,
                   trailing: FishiSwitch(value: prefs.chatBackground, onChanged: (v) => prefs.chatBackground = v),
                 ),
@@ -184,16 +201,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SliverToBoxAdapter(
             child: Reveal(
               delay: d(),
-              child: Section(title: 'Alerts', children: [
+              child: Section(title: tr('Alerts'), children: [
                 RowTile(
                   icon: Icons.notifications_none_rounded,
-                  title: 'Notifications',
+                  title: tr('Notifications'),
                   chevron: false,
                   trailing: FishiSwitch(value: prefs.notifications, onChanged: (v) => prefs.notifications = v),
                 ),
                 RowTile(
                   icon: Icons.volume_up_outlined,
-                  title: 'Sounds',
+                  title: tr('Sounds'),
                   chevron: false,
                   trailing: FishiSwitch(value: prefs.sounds, onChanged: (v) => prefs.sounds = v),
                 ),
@@ -204,11 +221,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SliverToBoxAdapter(
               child: Reveal(
                 delay: d(),
-                child: Section(title: 'Staff', children: [
+                child: Section(title: tr('Staff'), children: [
                   RowTile(
                     icon: Icons.shield_outlined,
-                    title: 'Admin panel',
-                    subtitle: 'Stats, announcements, Finn, safety',
+                    title: tr('Admin panel'),
+                    subtitle: tr('Stats, announcements, Finn, safety'),
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AdminScreen())),
                   ),
                 ]),
@@ -218,8 +235,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Reveal(
               delay: d(),
               child: Section(
-                footer: 'Fishi is for adults 18 and over. Messages matching safety terms can be reviewed by the Fishi team.',
-                children: [RowTile(icon: Icons.logout_rounded, title: 'Sign out', danger: true, chevron: false, onTap: _signOut)],
+                footer: tr('Fishi is for adults 18 and over. Messages matching safety terms can be reviewed by the Fishi team.'),
+                children: [RowTile(icon: Icons.logout_rounded, title: tr('Sign out'), danger: true, chevron: false, onTap: _signOut)],
               ),
             ),
           ),
@@ -261,7 +278,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       await supa.from('profiles').update({'avatar_path': path}).eq('id', myId!);
       await Profiles.instance.refresh(myId!);
     } catch (_) {
-      if (mounted) showToast(context, 'Could not update your photo.', error: true);
+      if (mounted) showToast(context, tr('Could not update your photo.'), error: true);
     }
     if (mounted) setState(() => _uploading = false);
   }
@@ -274,13 +291,13 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       await supa.from('profiles').update({'display_name': name, 'bio': _bio.text.trim()}).eq('id', myId!);
       await Profiles.instance.refresh(myId!);
       if (mounted) {
-        showToast(context, 'Saved');
+        showToast(context, tr('Saved'));
         Navigator.of(context).pop();
       }
     } catch (_) {
       if (mounted) {
         setState(() => _busy = false);
-        showToast(context, 'Could not save.', error: true);
+        showToast(context, tr('Could not save.'), error: true);
       }
     }
   }
@@ -290,7 +307,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     final p = Palette.of(context);
     final current = Profiles.instance.me;
     return Scaffold(
-      appBar: const TopBar(title: 'Profile'),
+      appBar: TopBar(title: tr('Profile')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
         children: [
@@ -314,16 +331,16 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           ),
           const SizedBox(height: 26),
           Stagger(children: [
-            FishiField(controller: _name, label: 'Name', maxLength: 40, textCapitalization: TextCapitalization.words),
+            FishiField(controller: _name, label: tr('Name'), maxLength: 40, textCapitalization: TextCapitalization.words),
             const SizedBox(height: 12),
-            FishiField(controller: _bio, label: 'Bio', maxLength: 160, maxLines: 4, textCapitalization: TextCapitalization.sentences),
+            FishiField(controller: _bio, label: tr('Bio'), maxLength: 160, maxLines: 4, textCapitalization: TextCapitalization.sentences),
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.only(left: 6),
-              child: Text('@${current?.username ?? ''} · usernames cannot be changed', style: TextStyle(fontSize: 13, color: p.muted)),
+              child: Text('@${current?.username ?? ''} · ${tr('usernames cannot be changed')}', style: TextStyle(fontSize: 13, color: p.muted)),
             ),
             const SizedBox(height: 24),
-            PillButton(label: 'Save', busy: _busy, onTap: _save),
+            PillButton(label: tr('Save'), busy: _busy, onTap: _save),
           ]),
         ],
       ),

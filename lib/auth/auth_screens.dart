@@ -10,9 +10,10 @@ import '../core/data.dart';
 import '../core/motion.dart';
 import '../core/theme.dart';
 import '../ui/kit.dart';
+import '../core/i18n.dart';
 
-const moderationLine =
-    'Fishi is for adults 18 and over. Messages that match our safety terms can be reviewed by the Fishi team. Normal chats stay private.';
+String get moderationLine =>
+    tr('Fishi is for adults 18 and over. Messages that match our safety terms can be reviewed by the Fishi team. Normal chats stay private.');
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -64,24 +65,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
               const SizedBox(height: 6),
               Reveal(
                 delay: const Duration(milliseconds: 240),
-                child: Text('Messaging that feels calm.', style: TextStyle(fontSize: 17, color: p.muted)),
+                child: Text(tr('Messaging that feels calm.'), style: TextStyle(fontSize: 17, color: p.muted)),
               ),
               const Spacer(flex: 4),
               Reveal(
                 delay: const Duration(milliseconds: 360),
                 offset: const Offset(0, 30),
-                child: PillButton(label: 'Create account', onTap: () => Navigator.of(context).push(fadeRoute(const SignUpScreen()))),
+                child: PillButton(label: tr('Create account'), onTap: () => Navigator.of(context).push(fadeRoute(const SignUpScreen()))),
               ),
               const SizedBox(height: 12),
               Reveal(
                 delay: const Duration(milliseconds: 430),
                 offset: const Offset(0, 30),
-                child: PillButton(label: 'I already have one', secondary: true, onTap: () => Navigator.of(context).push(fadeRoute(const SignInScreen()))),
+                child: PillButton(label: tr('I already have one'), secondary: true, onTap: () => Navigator.of(context).push(fadeRoute(const SignInScreen()))),
               ),
               const SizedBox(height: 18),
               Reveal(
                 delay: const Duration(milliseconds: 520),
-                child: Text('18+ only', style: TextStyle(fontSize: 13, color: p.muted, letterSpacing: 0.3)),
+                child: Text(tr('18+ only'), style: TextStyle(fontSize: 13, color: p.muted, letterSpacing: 0.3)),
               ),
               const SizedBox(height: 14),
             ]),
@@ -184,10 +185,10 @@ class _AuthFrame extends StatelessWidget {
 
 String? usernameProblem(String u) {
   if (u.isEmpty) return null;
-  if (u.length < 3) return 'At least 3 characters';
-  if (u.length > 20) return 'At most 20 characters';
-  if (!RegExp(r'^[a-z0-9_]+$').hasMatch(u)) return 'Letters, numbers and _ only';
-  if (u.startsWith('_') || u.endsWith('_') || u.contains('__')) return 'Underscores can only go in the middle';
+  if (u.length < 3) return tr('At least 3 characters');
+  if (u.length > 20) return tr('At most 20 characters');
+  if (!RegExp(r'^[a-z0-9_]+$').hasMatch(u)) return tr('Letters, numbers and _ only');
+  if (u.startsWith('_') || u.endsWith('_') || u.contains('__')) return tr('Underscores can only go in the middle');
   return null;
 }
 
@@ -268,17 +269,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _busy = false;
         if (m.contains('username_unavailable') || m.contains('database error') || m.contains('already registered')) {
           _avail = _Avail.taken;
-          _error = 'That username is not available.';
+          _error = tr('That username is not available.');
         } else if (m.contains('password')) {
           _error = e.message;
         } else {
-          _error = 'Could not create your account. Check your connection and try again.';
+          _error = tr('Could not create your account. Check your connection and try again.');
         }
       });
     } catch (_) {
       setState(() {
         _busy = false;
-        _error = 'Could not create your account. Check your connection and try again.';
+        _error = tr('Could not create your account. Check your connection and try again.');
       });
     }
   }
@@ -288,12 +289,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final p = Palette.of(context);
     final uProblem = usernameProblem(_user.text.trim());
     return _AuthFrame(
-      title: 'Create account',
-      subtitle: 'Pick a name people will see and a username they can find you by.',
+      title: tr('Create account'),
+      subtitle: tr('Pick a name people will see and a username they can find you by.'),
       children: [
         FishiField(
           controller: _name,
-          label: 'Your name',
+          label: tr('Your name'),
           maxLength: 40,
           textCapitalization: TextCapitalization.words,
           textInputAction: TextInputAction.next,
@@ -303,7 +304,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(height: 12),
         FishiField(
           controller: _user,
-          label: 'Username',
+          label: tr('Username'),
           prefix: '@',
           maxLength: 20,
           textInputAction: TextInputAction.next,
@@ -313,13 +314,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
             TextInputFormatter.withFunction((o, n) => n.copyWith(text: n.text.toLowerCase())),
           ],
           onChanged: _onUsername,
-          error: uProblem ?? (_avail == _Avail.taken ? 'That username is taken' : null),
+          error: uProblem ?? (_avail == _Avail.taken ? tr('That username is taken') : null),
           suffix: _AvailIcon(state: _avail),
         ),
         const SizedBox(height: 12),
         FishiField(
           controller: _pass,
-          label: 'Password',
+          label: tr('Password'),
           obscure: true,
           autofillHints: const [AutofillHints.newPassword],
           onChanged: (_) => setState(() {}),
@@ -347,7 +348,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
         ),
         const SizedBox(height: 22),
-        PillButton(label: 'Create account', busy: _busy, onTap: _valid ? _submit : null),
+        PillButton(label: tr('Create account'), busy: _busy, onTap: _valid ? _submit : null),
       ],
     );
   }
@@ -402,10 +403,10 @@ class _StrengthBar extends StatelessWidget {
     if (RegExp(r'[^a-zA-Z0-9]').hasMatch(password) || RegExp(r'[A-Z]').hasMatch(password)) score++;
     if (password.isEmpty) score = 0;
     final label = password.isEmpty
-        ? 'At least 6 characters'
+        ? tr('At least 6 characters')
         : password.length < 6
-            ? 'Too short'
-            : const ['Weak', 'Okay', 'Good', 'Strong', 'Strong'][score];
+            ? tr('Too short')
+            : [tr('Weak'), tr('Okay'), tr('Good'), tr('Strong'), tr('Strong')][score];
     return Row(children: [
       for (var i = 0; i < 4; i++)
         Expanded(
@@ -475,7 +476,7 @@ class _AdultCard extends StatelessWidget {
             child: AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 300),
               style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600, color: value ? p.paper : p.ink, fontFamily: kTextFont),
-              child: const Text('I am 18 or older'),
+              child: Text(tr('I am 18 or older')),
             ),
           ),
         ]),
@@ -516,13 +517,13 @@ class _SignInScreenState extends State<SignInScreen> {
     } on AuthException catch (e) {
       setState(() {
         _busy = false;
-        _error = e.message.toLowerCase().contains('invalid') ? 'Wrong username or password.' : 'Could not sign in. Try again.';
+        _error = e.message.toLowerCase().contains('invalid') ? tr('Wrong username or password.') : tr('Could not sign in. Try again.');
       });
       HapticFeedback.heavyImpact();
     } catch (_) {
       setState(() {
         _busy = false;
-        _error = 'Could not sign in. Check your connection.';
+        _error = tr('Could not sign in. Check your connection.');
       });
     }
   }
@@ -531,12 +532,12 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     final p = Palette.of(context);
     return _AuthFrame(
-      title: 'Welcome back',
-      subtitle: 'Sign in with your username.',
+      title: tr('Welcome back'),
+      subtitle: tr('Sign in with your username.'),
       children: [
         FishiField(
           controller: _user,
-          label: 'Username',
+          label: tr('Username'),
           prefix: '@',
           textInputAction: TextInputAction.next,
           autofillHints: const [AutofillHints.username],
@@ -546,7 +547,7 @@ class _SignInScreenState extends State<SignInScreen> {
         const SizedBox(height: 12),
         FishiField(
           controller: _pass,
-          label: 'Password',
+          label: tr('Password'),
           obscure: true,
           autofillHints: const [AutofillHints.password],
           onChanged: (_) => setState(() {}),
@@ -565,7 +566,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
         ),
         const SizedBox(height: 26),
-        PillButton(label: 'Sign in', busy: _busy, onTap: _user.text.trim().isNotEmpty && _pass.text.isNotEmpty ? _submit : null),
+        PillButton(label: tr('Sign in'), busy: _busy, onTap: _user.text.trim().isNotEmpty && _pass.text.isNotEmpty ? _submit : null),
       ],
     );
   }
@@ -592,7 +593,7 @@ class _AgeConfirmScreenState extends State<AgeConfirmScreen> {
     } catch (_) {
       if (mounted) {
         setState(() => _busy = false);
-        showToast(context, 'Could not save. Try again.', error: true);
+        showToast(context, tr('Could not save. Try again.'), error: true);
       }
     }
   }
@@ -610,7 +611,7 @@ class _AgeConfirmScreenState extends State<AgeConfirmScreen> {
             const SizedBox(height: 20),
             Reveal(
               delay: const Duration(milliseconds: 100),
-              child: Text('One quick thing', style: TextStyle(fontFamily: kDisplayFont, fontSize: 28, fontWeight: FontWeight.w800, color: p.ink)),
+              child: Text(tr('One quick thing'), style: TextStyle(fontFamily: kDisplayFont, fontSize: 28, fontWeight: FontWeight.w800, color: p.ink)),
             ),
             const SizedBox(height: 10),
             Reveal(
@@ -622,12 +623,12 @@ class _AgeConfirmScreenState extends State<AgeConfirmScreen> {
             const SizedBox(height: 14),
             Reveal(
               delay: const Duration(milliseconds: 300),
-              child: PillButton(label: 'Continue', busy: _busy, onTap: _adult ? _go : null),
+              child: PillButton(label: tr('Continue'), busy: _busy, onTap: _adult ? _go : null),
             ),
             const SizedBox(height: 10),
             Reveal(
               delay: const Duration(milliseconds: 340),
-              child: PillButton(label: 'Sign out', secondary: true, onTap: () => supa.auth.signOut()),
+              child: PillButton(label: tr('Sign out'), secondary: true, onTap: () => supa.auth.signOut()),
             ),
           ]),
         ),

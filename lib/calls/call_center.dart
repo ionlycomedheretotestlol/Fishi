@@ -13,6 +13,7 @@ import '../core/motion.dart';
 import '../ui/kit.dart';
 import 'call_screen.dart';
 import 'incoming_call_screen.dart';
+import '../core/i18n.dart';
 
 class CallCenter {
   CallCenter._();
@@ -67,7 +68,7 @@ class CallCenter {
     await Profiles.instance.ensure([c.startedBy]);
     final caller = Profiles.instance[c.startedBy];
     final chat = Inbox.instance.chat(c.chatId);
-    final title = chat?.isGroup == true ? '${caller?.displayName ?? 'Someone'} in ${chat!.title}' : (caller?.displayName ?? 'Someone');
+    final title = chat?.isGroup == true ? tr('{name} in {group}', {'name': caller?.displayName ?? tr('Someone'), 'group': chat!.title}) : (caller?.displayName ?? tr('Someone'));
     if (!Notify.foreground) Notify.call(callId: c.id, chatId: c.chatId, title: title, video: c.video);
     _startRing();
     final nav = navigatorKey.currentState;
@@ -105,19 +106,19 @@ class CallCenter {
   Future<bool> _permissions(BuildContext context, bool video) async {
     final mic = await Permission.microphone.request();
     if (!mic.isGranted) {
-      if (context.mounted) showToast(context, 'Fishi needs the microphone for calls.', error: true);
+      if (context.mounted) showToast(context, tr('Fishi needs the microphone for calls.'), error: true);
       return false;
     }
     if (video) {
       final cam = await Permission.camera.request();
-      if (!cam.isGranted && context.mounted) showToast(context, 'Camera is off. Starting with voice only.');
+      if (!cam.isGranted && context.mounted) showToast(context, tr('Camera is off. Starting with voice only.'));
     }
     return true;
   }
 
   Future<void> start(BuildContext context, String chatId, {required bool video, required String title}) async {
     if (activeCallId != null) {
-      showToast(context, 'You are already in a call.');
+      showToast(context, tr('You are already in a call.'));
       return;
     }
     if (!await _permissions(context, video)) return;
@@ -142,7 +143,7 @@ class CallCenter {
       if (!context.mounted) return;
       await Navigator.of(context, rootNavigator: true).push(fadeRoute(CallScreen(call: call, title: title, outgoing: !joining, video: video)));
     } catch (_) {
-      if (context.mounted) showToast(context, 'Could not start the call.', error: true);
+      if (context.mounted) showToast(context, tr('Could not start the call.'), error: true);
     }
   }
 
@@ -176,7 +177,7 @@ class CallCenter {
           await supa.from('messages').insert({
             'chat_id': call.chatId,
             'kind': 'call',
-            'body': video ? 'Missed video call' : 'Missed voice call',
+            'body': video ? tr('Missed video call') : tr('Missed voice call'),
             'media_meta': {'video': video, 'missed': true, 'call_id': call.id},
           });
         }
@@ -190,7 +191,7 @@ class CallCenter {
         await supa.from('messages').insert({
           'chat_id': call.chatId,
           'kind': 'call',
-          'body': '${video ? 'Video call' : 'Voice call'} · $mins:$secs',
+          'body': '${video ? tr('Video call') : tr('Voice call')} · $mins:$secs',
           'media_meta': {'video': video, 'duration_s': duration.inSeconds, 'call_id': call.id},
         });
       }

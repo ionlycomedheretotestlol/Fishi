@@ -10,6 +10,7 @@ import '../core/theme.dart';
 import '../emoji/chibi.dart';
 import '../emoji/emoji_text.dart';
 import '../ui/kit.dart';
+import '../core/i18n.dart';
 
 const quickReactions = ['❤️', '😂', '👍', '👎', '😮', '😢'];
 
@@ -292,7 +293,7 @@ String copyText(Message m) => m.body;
 
 void copyMessage(BuildContext context, Message m) {
   Clipboard.setData(ClipboardData(text: copyText(m)));
-  showToast(context, 'Copied');
+  showToast(context, tr('Copied'));
 }
 
 String? myReactionOf(List<Reaction>? list) => list?.where((r) => r.userId == myId).firstOrNull?.emoji;

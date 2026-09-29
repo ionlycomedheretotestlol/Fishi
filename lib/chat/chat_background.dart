@@ -3,8 +3,9 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../brand/fish_logo.dart';
+import '../core/i18n.dart';
 
-const chatPatterns = ['Bubbles', 'School', 'Waves'];
+List<String> get chatPatterns => [tr('Bubbles'), tr('School'), tr('Waves')];
 
 class ChatBackground extends StatelessWidget {
   const ChatBackground({super.key, required this.pattern, required this.color});
