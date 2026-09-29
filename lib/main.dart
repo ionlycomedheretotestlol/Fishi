@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'intro/boot_screen.dart';
 import 'login_screen.dart';
 import 'rooms_screen.dart';
 import 'theme.dart';
@@ -36,7 +37,7 @@ class FishiApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: AppColors.bg,
-        colorScheme: const ColorScheme.dark(primary: AppColors.mine, surface: AppColors.bg),
+        colorScheme: const ColorScheme.dark(primary: AppColors.mine, onPrimary: AppColors.bg, surface: AppColors.bg),
         splashFactory: NoSplash.splashFactory,
         highlightColor: Colors.transparent,
         pageTransitionsTheme: const PageTransitionsTheme(builders: {
@@ -44,7 +45,7 @@ class FishiApp extends StatelessWidget {
           TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
         }),
       ),
-      home: const Gate(),
+      home: BootScreen(next: (_) => const Gate()),
     );
   }
 }

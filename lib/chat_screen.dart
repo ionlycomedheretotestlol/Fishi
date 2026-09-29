@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
+import 'brand/send_bubble.dart';
 import 'main.dart';
 import 'theme.dart';
 
@@ -304,27 +305,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  GestureDetector(
-                    onTap: canSend ? _send : null,
-                    child: AnimatedScale(
-                      duration: const Duration(milliseconds: 250),
-                      curve: Curves.easeOutBack,
-                      scale: canSend ? 1 : 0.85,
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 150),
-                        width: 34,
-                        height: 34,
-                        margin: const EdgeInsets.only(bottom: 2),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: canSend ? AppColors.mine : AppColors.theirs,
-                        ),
-                        child: Icon(CupertinoIcons.arrow_up,
-                            size: 20, color: canSend ? Colors.white : AppColors.muted),
-                      ),
-                    ),
-                  ),
+                  const SizedBox(width: 10),
+                  SendBubbleButton(enabled: canSend, onTap: _send, size: 40),
                 ],
               ),
             ),
@@ -388,7 +370,7 @@ class _Bubble extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
                   child: Text(
                     message.body,
-                    style: TextStyle(fontSize: 16, height: 1.3, color: mine ? Colors.white : AppColors.text),
+                    style: TextStyle(fontSize: 16, height: 1.3, color: mine ? AppColors.bg : AppColors.text),
                   ),
                 ),
               ),

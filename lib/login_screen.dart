@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: _submit,
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.mine,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.bg,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
